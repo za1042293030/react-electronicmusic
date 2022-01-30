@@ -1,0 +1,12 @@
+# 目录结构
+--public
+--src
+  --assets //静态资源文件夹
+  --common //常量类型等
+  --components  //组件
+  --hooks  //利用逻辑
+  --pages  //页面
+  --router  //路由
+  --services  //服务
+  --store  //状态管理
+  --utils  //工具
