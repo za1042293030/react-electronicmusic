@@ -1,0 +1,101 @@
+.personal-center {
+  background: var(--common-color);
+
+  .main {
+    .personal-center-container {
+      width: 120rem;
+      margin: 0 auto;
+
+      .playlist-card-bottom {
+        padding: .5rem;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        cursor: pointer;
+        border-bottom: .1rem solid var(--shadow-color);
+
+        .playlist-tag-container {
+          width: 100%;
+          flex: 1;
+          overflow: auto;
+
+          &::-webkit-scrollbar {
+            height: 0;
+            width: 0;
+          }
+
+          .playlist-tag {
+            margin-bottom: .4rem;
+          }
+        }
+
+        .card-info {
+          font-size: 1.3rem;
+          color: rgb(92, 92, 92);
+
+          span {
+            padding: 0 .2rem;
+          }
+        }
+      }
+
+      .personal-info {
+        width: 100%;
+        height: 6rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: .1rem solid var(--shadow-color);
+        background: var(--common-color);
+        padding: .2rem .5rem;
+
+        .personal-name {
+          flex: 1;
+          padding: 0 1rem;
+          font-size: 1.6rem;
+          color: rgb(87, 87, 87);
+        }
+
+        .personal-info-avatar {
+          display: flex;
+          align-items: center;
+        }
+
+        .personal-info-follow {
+          display: flex;
+          height: 100%;
+
+          .personal-info-follow-btn {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0 .5rem;
+          }
+
+          .personal-info-follow-text {
+            height: 100%;
+            color: rgb(121, 121, 121);
+            display: flex;
+            align-items: center;
+
+            p {
+              display: inline-flex;
+              flex-direction: column;
+              align-items: center;
+              padding: 0 1rem;
+              font-size: 1.2rem;
+            }
+          }
+        }
+      }
+
+      .personal-tabs {
+        margin-top: 1rem;
+        padding: 0 1rem;
+      }
+    }
+  }
+}
+
+@import './m';

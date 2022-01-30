@@ -1,0 +1,40 @@
+.playlist {
+  .col-container {
+    padding: 1rem 1.5rem;
+    width: 25%;
+    display: inline-block;
+
+    .playlist-card-bottom {
+      padding: .5rem;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      
+      .playlist-tag-container {
+        width: 100%;
+        flex: 1;
+        overflow: auto;
+
+        &::-webkit-scrollbar {
+          height: 0;
+          width: 0;
+        }
+
+        .playlist-tag {
+          margin-bottom: .4rem;
+        }
+      }
+      .card-info{
+        font-size: 1.3rem;
+        color: rgb(92, 92, 92);
+        span{
+          padding: 0 .2rem;
+        }
+      }
+    }
+  }
+}
+
+@import './m';

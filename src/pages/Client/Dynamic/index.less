@@ -1,0 +1,33 @@
+.dynamic-detail {
+  .main {
+    .dynamic-detail-container {
+      width: 120rem;
+      margin: 0 auto;
+      display: flex;
+      justify-content: center;
+
+      .dynamic-card-container {
+        width: 120rem;
+        background: var(--common-color);
+        padding: 1rem;
+      }
+
+      .back {
+        width: 100%;
+        background: var(--common-color);
+        display: inline-flex;
+        align-items: center;
+        padding: 1rem;
+        border-top: .1rem solid var(--shadow-color);
+        cursor: pointer;
+        z-index: 10;
+
+        .back-text {
+          padding: 0 .5rem;
+        }
+      }
+    }
+  }
+}
+
+@import './m';

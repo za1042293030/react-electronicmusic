@@ -1,0 +1,60 @@
+@media screen and (max-width:1399px) {
+  .album {
+    .main {
+      .col-container {
+        width: 16.66%;
+        transition: all .2s;
+      }
+    }
+  }
+}
+
+@media screen and (max-width:1199px) {
+  .album {
+    .main {
+      .col-container {
+        width: 25%;
+        transition: all .2s;
+
+        .card {
+
+          &:hover {
+            box-shadow: none;
+          }
+
+          .card-top {
+            &::after {
+              display: none;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width:767px) {
+  .album {
+    .main {
+      .col-container {
+        width: 50%;
+        padding: .2rem;
+        transition: all .2s;
+      }
+    }
+  }
+}
+
+@media screen and (max-width:360px) {
+  .album {
+    .main {
+      .col-container {
+        width: 100%;
+        padding: .2rem;
+        transition: all .2s;
+        display: flex;
+        justify-content: center;
+      }
+    }
+  }
+}

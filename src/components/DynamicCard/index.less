@@ -1,0 +1,130 @@
+.dynamic-card {
+  padding: 1rem 1rem;
+  width: 100%;
+  border-bottom: .1rem solid var(--shadow-color);
+  margin-bottom: 1rem;
+  background: var(--common-color);
+
+  .head {
+    display: flex;
+    width: 100%;
+
+    .dynamic-card-left {
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .time {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-end;
+      color: rgb(151, 151, 151);
+      font-size: 1.2rem;
+    }
+
+  }
+
+  .dynamic-card-content {
+    width: 100%;
+    padding: .8rem 0 0 0;
+
+    .dynamic-card-text {
+      padding: .5rem;
+      width: 100%;
+
+      .text {
+        line-height: 2.5rem;
+      }
+    }
+
+    .music-card {
+      height: 100%;
+      width: 100%;
+      padding: .5rem 0;
+
+      .card-child {
+        height: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        padding: 0 .5rem;
+
+        p {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          max-width: 25rem;
+
+          span {
+            color: rgb(143, 143, 143);
+            font-size: 1.2rem;
+            padding: 0 .5rem;
+          }
+        }
+      }
+    }
+
+    .picture-group {
+      width: 33rem;
+      padding: .5rem 0;
+
+      .picture-container {
+        display: inline-block;
+        width: 10rem;
+        height: 10rem;
+        overflow: hidden;
+        margin: .5rem .5rem 0;
+        position: relative;
+
+        img {
+          width: 100%;
+          margin: 50% auto;
+          transform: translateY(-50%);
+        }
+
+        .perview {
+          content: '';
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.3);
+          position: absolute;
+          top: 0;
+          left: 0;
+          opacity: 0;
+          transition: all .2s;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        &:hover {
+          .perview {
+            opacity: 1;
+            transition: all .2s;
+          }
+        }
+      }
+    }
+  }
+
+  .dynamic-card-bottom {
+    width: 100%;
+    padding: 1rem 0;
+
+    .dynamic-card-icon {
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+
+      .dynamic-icon-text {
+        padding: 0 .4rem;
+      }
+    }
+  }
+}

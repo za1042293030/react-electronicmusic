@@ -1,0 +1,133 @@
+.playlist {
+  padding: 1rem 0;
+
+  .main {
+    .playlist-detail-container {
+      width: 120rem;
+      margin: 0 auto;
+
+      .playlist-song-list {
+        margin-top: 1rem;
+        width: 100%;
+        background: var(--common-color);
+
+        .playlist-song-list-header {
+          padding: 0 1rem;
+          color: rgb(54, 54, 54);
+          font-size: 1.3rem;
+        }
+
+        .playlist-song-list-item {
+          width: 100%;
+
+          .card-child {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0 1rem;
+
+            span {
+              margin: 0 1rem;
+              font-size: 1.2rem;
+              color: rgb(155, 155, 155);
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+            }
+          }
+        }
+      }
+
+      .playlist-detail-container-musiccard {
+
+        .playlist-card-right {
+          padding: 1rem 1rem .2rem 1rem;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          height: 25rem;
+
+          .playlist-card-right-tag-box {
+            overflow: auto;
+            width: 100%;
+            height: 3rem;
+
+            &::-webkit-scrollbar {
+              height: 0;
+              width: 0;
+            }
+          }
+
+          .playlist-card-name {
+            font-size: 1.6rem;
+          }
+
+          .playlist-card-describe {
+            width: 100%;
+            height: 70%;
+            overflow: auto;
+            border-bottom: .1rem solid var(--shadow-color);
+
+            p {
+              width: 100%;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: pre-wrap;
+            }
+          }
+
+          .playlist-card-right-bottom {
+            width: 100%;
+            height: 30%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 1.4rem;
+            overflow: hidden;
+
+            p {
+              font-size: 1.3rem;
+              overflow: auto;
+              white-space: nowrap;
+              color: rgb(133, 133, 133);
+              max-width: 50%;
+            }
+
+            .playlist-card-right-bottom-artist {
+              width: 50%;
+
+              &::-webkit-scrollbar {
+                height: 0;
+                width: 0;
+              }
+            }
+
+            .playlist-card-right-bottom-time {
+              padding-left:.4rem;
+              &::-webkit-scrollbar {
+                height: 0;
+                width: 0;
+              }
+            }
+          }
+        }
+      }
+
+      .playlist-comment-list {
+        margin-top: 1rem;
+        background: var(--common-color);
+        padding: 0 1rem;
+
+        .playlist-comment-reply {
+          color: black;
+        }
+
+        .playlist-comment-list-text {
+          padding: 1.2rem 0;
+        }
+      }
+    }
+  }
+}
+
+@import './m';

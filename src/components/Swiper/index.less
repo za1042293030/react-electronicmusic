@@ -1,0 +1,26 @@
+.swiper {
+  overflow: hidden;
+  width: 160rem;
+  min-height: 40rem;
+  border-radius: 1rem;
+  box-shadow: 0.5rem 0.5rem 0.5rem 0 var(--shadow-color);
+  margin-top: 1rem;
+  --swiper-theme-color: var(--main-color);
+
+  @media screen and (max-width:1599px) {
+    width: 98%;
+    min-height: 0;
+  }
+
+  @media screen and (max-width:1199px) {
+    margin-top: .5rem;
+  }
+
+  .swiper-img {
+    border-radius: 1rem;
+    box-shadow: 0.5rem 0.5rem 0.5rem 0 var(--shadow-color);
+    height: 100%;
+    width: 100%;
+    cursor: pointer;
+  }
+}

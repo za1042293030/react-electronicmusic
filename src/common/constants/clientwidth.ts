@@ -1,0 +1,4 @@
+const SM_CWIDTH = 992;
+const MD_CWIDTH = 1200;
+const XS_CWIDTH = 768;
+export { SM_CWIDTH, MD_CWIDTH, XS_CWIDTH };

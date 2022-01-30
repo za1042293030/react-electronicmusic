@@ -1,0 +1,38 @@
+.dynamic {
+  .main {
+    .dynamic-container {
+      width: 120rem;
+      margin: 0 auto;
+      display: flex;
+      justify-content: center;
+
+      .left {
+        width: 20rem;
+        height: 100%;
+        margin: 1rem .5rem;
+        position: sticky;
+        top: 0;
+
+        .footer-container {
+          margin-top: 1rem;
+          background: transparent;
+        }
+      }
+
+      .middle {
+        flex: 1;
+        height: 100%;
+        margin: 1rem .5rem;
+
+        .dynamic-card-container {
+          margin-top: 1rem;
+          width: 100%;
+          background: var(--common-color);
+          padding: 1rem;
+        }
+      }
+    }
+  }
+}
+
+@import './m';

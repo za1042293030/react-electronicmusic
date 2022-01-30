@@ -1,0 +1,87 @@
+.style {
+  .main {
+
+    .tag-nav {
+      margin: 1rem 1rem 0 1rem;
+      height: 8rem;
+      width: 100%-1rem;
+      background-color: var(--common-color);
+      display: flex;
+      justify-content: space-around;
+
+      .tag-nav-container {
+        flex: 1;
+        padding: 0 0 0 5rem;
+      }
+
+      .tag-links {
+        padding-top: 1rem;
+      }
+    }
+  }
+
+  .list {
+    margin: 1rem 1rem;
+    padding: 1rem 1rem;
+    width: 100%-1rem;
+    min-height: 80vh;
+    background: #fff;
+    
+    .style-pagination{
+      padding: .4rem 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    .song-card-bottom {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+
+      .song-tag-container {
+        width: 100%;
+        height: 2.2rem;
+        overflow: auto;
+        margin: .2rem 0;
+
+        &::-webkit-scrollbar {
+          height: 0;
+          width: 0;
+        }
+
+        .song-tag-container-inline {
+          height: 100%;
+          display: flex;
+        }
+      }
+
+      .card-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .song-name {
+          max-width: 50%;
+          color: rgb(82, 82, 82);
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .song-producers {
+          max-width: 50%;
+          color: rgb(121, 121, 121);
+          font-size: 1.2rem;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
+    }
+  }
+}
+
+@import './m';
