@@ -1,4 +1,4 @@
-import { ILogin, IRegister, IToken, IUserInfo } from '@/common/typings';
+import { IChangePassword, ILogin, IRegister, IToken, IUserInfo } from '@/common/typings';
 import { ajax } from './ajax';
 
 async function login(data: ILogin): Promise<IToken | null | undefined> {
@@ -62,6 +62,16 @@ async function getAdminInfo(id: number): Promise<IUserInfo | null | undefined> {
   )?.data.data;
 }
 
+async function changePassword(data: IChangePassword): Promise<boolean | null | undefined> {
+  return (
+    await ajax<boolean>({
+      url: '/api/auth/changePassword',
+      method: 'POST',
+      data,
+    })
+  )?.data.data;
+}
+
 export {
   login,
   getUserInfo,
@@ -70,4 +80,5 @@ export {
   checkNickNameUnique,
   loginAdmin,
   getAdminInfo,
+  changePassword
 };

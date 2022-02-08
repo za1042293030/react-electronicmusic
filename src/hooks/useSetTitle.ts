@@ -1,9 +1,9 @@
 import { DEFAULT_TITLE } from '@/common/constants';
-import { useEffect } from 'react';
+import { DependencyList, useEffect } from 'react';
 
-function useSetTitle(title: string | undefined) {
+function useSetTitle(title: string | undefined, deps: DependencyList = []) {
   useEffect(() => {
     document.title = !title ? DEFAULT_TITLE : title;
-  }, []);
+  }, deps);
 }
 export { useSetTitle };

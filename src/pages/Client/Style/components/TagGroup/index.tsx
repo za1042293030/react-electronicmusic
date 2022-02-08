@@ -7,10 +7,16 @@ import { IStyle } from '@/common/typings/service';
 
 const { CheckableTag } = Tag;
 
-const TagGroup: FC<IProps> = ({ tags, chooseId, onChange, onMouseEnter }): ReactElement => {
+const TagGroup: FC<IProps> = ({
+  tags,
+  chooseId,
+  emptyEl,
+  onChange,
+  onMouseEnter,
+}): ReactElement => {
   return (
     <div className="tag-group">
-      <For data={tags}>
+      <For data={tags} emptyEl={emptyEl}>
         {(tag: IStyle) => (
           <div key={tag.id} onMouseEnter={() => onMouseEnter && onMouseEnter(tag)}>
             <CheckableTag
@@ -24,5 +30,8 @@ const TagGroup: FC<IProps> = ({ tags, chooseId, onChange, onMouseEnter }): React
       </For>
     </div>
   );
+};
+TagGroup.defaultProps = {
+  emptyEl: false,
 };
 export default memo(TagGroup);

@@ -26,4 +26,10 @@ const nickNameRule: Rule[] = [
   { validator: nickNameValid, validateTrigger: 'onSubmit' },
 ];
 
-export { userNameRule, passwordRule, phoneRule, nickNameRule };
+const playListNameRule: Rule[] = [
+  { type: 'string', max: 20, message: '歌单名称至多20个字符' },
+];
+
+const playListDescribeRule: Rule[] = [{ type: 'string', max: 220, message: '歌单简介至多220个字符' }];
+
+export { userNameRule, passwordRule, phoneRule, nickNameRule, playListNameRule, playListDescribeRule };

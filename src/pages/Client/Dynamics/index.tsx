@@ -1,10 +1,9 @@
 import { SM_CWIDTH } from '@/common/constants/clientwidth';
 import { IDynamic, IRouterProps, IStoreState } from '@/common/typings';
 import { Empty, Footer, For, If } from '@/components';
-import { usePlayList, useSetTitle } from '@/hooks';
+import { useHistoryScroll, usePlayList, useSetTitle } from '@/hooks';
 import { Affix, Menu, Skeleton } from 'antd';
 import React, { FC, ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import { DynamicCard } from '@/components';
 import DynamicForm from './components/DynamicForm';
 import './index.less';
@@ -14,7 +13,7 @@ import api from '@/services';
 import { useRef } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
-type Type = 'Recommend' | 'Latest' | 'Followed';
+type Type = 'Recommend' | 'Latest';
 interface IState {
   dynamics: IDynamic[];
   sideMode: 'inline' | 'horizontal';
@@ -50,8 +49,6 @@ const Dynamics: FC<IRouterProps> = ({ route }): ReactElement => {
         break;
       case 'Latest':
         newDynamics = await api.getLatestDynamics(pageIndex.current++, pageSize);
-        break;
-      case 'Followed':
         break;
       default:
         break;
@@ -94,9 +91,6 @@ const Dynamics: FC<IRouterProps> = ({ route }): ReactElement => {
         <Menu.Item key="2" onClick={() => changeType('Latest')}>
           最新
         </Menu.Item>
-        <Menu.Item key="3" onClick={() => changeType('Followed')}>
-          关注
-        </Menu.Item>
       </Menu>
     ),
     [sideMode]
@@ -115,13 +109,9 @@ const Dynamics: FC<IRouterProps> = ({ route }): ReactElement => {
     ),
     [sider]
   );
-
-  const history = useHistory();
+  const { push } = useHistoryScroll();
   const onComment = useCallback((id: number) => {
-    history.push('/client/dynamic/' + id);
-  }, []);
-  const onLike = useCallback((id: number) => {
-    console.log(id);
+    push('/client/dynamic/' + id);
   }, []);
   const userInfo = useSelector((state: IStoreState) => state.LoginReducer);
 
@@ -148,7 +138,6 @@ const Dynamics: FC<IRouterProps> = ({ route }): ReactElement => {
                   {(dynamic: IDynamic) => (
                     <DynamicCard
                       onComment={onComment}
-                      onLike={onLike}
                       onClickSong={addPlayList}
                       {...dynamic}
                       key={dynamic.id}

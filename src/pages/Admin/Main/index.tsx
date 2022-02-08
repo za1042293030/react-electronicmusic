@@ -1,5 +1,5 @@
 import React, { FC, ReactElement, useEffect, useState } from 'react';
-import { Layout, Menu, Button, message } from 'antd';
+import { Layout, Menu, Button, message, Popconfirm } from 'antd';
 import {
   DesktopOutlined,
   PieChartOutlined,
@@ -15,9 +15,7 @@ const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
 const Main: FC<IRouterProps> = ({ location: { state } }): ReactElement => {
-  const {
-    userInfo: { nickName },
-  } = useUserInfo();
+  const { userInfo } = useUserInfo();
 
   const history = useHistory();
   const { isAdmin } = useUserInfo();
@@ -61,10 +59,17 @@ const Main: FC<IRouterProps> = ({ location: { state } }): ReactElement => {
       </Sider>
       <Layout className="site-layout">
         <Header className="admin-header">
-          <Button type="primary" danger onClick={logOut}>
-            退出
-          </Button>
-          <p>欢迎你,{nickName}</p>
+          <Popconfirm
+            title="确定退出吗？"
+            onConfirm={() => logOut()}
+            okText="确定"
+            cancelText="取消"
+          >
+            <Button type="primary" danger>
+              退出
+            </Button>
+          </Popconfirm>
+          <p>欢迎你,{userInfo?.nickName}</p>
         </Header>
         <Content style={{ margin: '0 16px' }}>
           <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>

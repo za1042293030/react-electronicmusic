@@ -1,9 +1,10 @@
 import { XS_CWIDTH } from '@/common/constants';
 import { IUserSimple, ISearchAlbum, IStyle } from '@/common/typings';
 import { For, If, LazyLoad, Loading } from '@/components';
+import { useHistoryScroll } from '@/hooks';
 import { Table, Tag } from 'antd';
 import React, { FC, ReactElement, useContext, useEffect } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { SearchContext } from '..';
 const { Column } = Table;
 
@@ -11,7 +12,7 @@ const Album: FC = (): ReactElement => {
   const location = useLocation();
   const { data, total, loading, onChange, getKey } = useContext(SearchContext);
   const cWidth = document.documentElement.clientWidth;
-  const history = useHistory();
+  const { push } = useHistoryScroll();
 
   useEffect(() => {
     getKey && getKey(location.search);
@@ -19,11 +20,12 @@ const Album: FC = (): ReactElement => {
 
   const goToAlbum = (id: number) => {
     if (!id) return;
-    history.push('/client/album/' + id);
+    push('/client/album/' + id);
   };
 
   return (
     <Table
+      rowKey="id"
       dataSource={data as ISearchAlbum[]}
       pagination={{ pageSize: 20, position: ['bottomCenter'], total, showSizeChanger: false }}
       size={cWidth > XS_CWIDTH ? 'middle' : 'small'}
@@ -68,19 +70,20 @@ const Album: FC = (): ReactElement => {
         key="artists"
         colSpan={cWidth > XS_CWIDTH ? 1 : 2}
         render={(artists: IUserSimple[]) => (
-          <>
-            {artists.map((artist, index) => (
+          <For data={artists}>
+            {(artist: IUserSimple, index) => (
               <span
+                key={artist.id}
                 className="pointer"
                 onClick={() => {
-                  history.push('/client/personalcenter/' + artist.id);
+                  push('/client/personalcenter/' + artist.id);
                 }}
               >
                 {artist.nickName}
                 {index === artists.length - 1 ? null : ','}
               </span>
-            ))}
-          </>
+            )}
+          </For>
         )}
       />
     </Table>

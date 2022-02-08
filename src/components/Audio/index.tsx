@@ -1,5 +1,5 @@
 import { IDispatch, ISongSimple, IStoreState } from '@/common/typings';
-import { useDidUpdateEffect, usePlayList } from '@/hooks';
+import { useDidUpdateEffect, useHistoryScroll, usePlayList } from '@/hooks';
 import { clearPlaySong, deletePlaySong } from '@/store/actions';
 import { CaretRightOutlined, LeftOutlined, PauseOutlined, RightOutlined } from '@ant-design/icons';
 import { Button, Drawer, message, Popconfirm } from 'antd';
@@ -37,6 +37,7 @@ const _Audio: FC = (): ReactElement => {
   const audioBar = useRef<HTMLDivElement>(null);
   const timer = useRef<number>(-1);
   const { delPlayList } = usePlayList();
+  const { push } = useHistoryScroll();
 
   useEffect(() => {
     audio.current.loop = false;
@@ -101,7 +102,6 @@ const _Audio: FC = (): ReactElement => {
       visible: false,
       index: i,
     }));
-    play();
   };
 
   const deletePlaysongById = (id: number) => {
@@ -250,7 +250,16 @@ const _Audio: FC = (): ReactElement => {
         onClick={onOpen}
         playBtn={false}
       >
-        <div className="card-child">
+        <div
+          className="card-child"
+          onClick={() => {
+            setState(state => ({
+              ...state,
+              visible: false,
+            }));
+            push('/client/song/' + playingSong?.id);
+          }}
+        >
           <If
             flag={isEmpty(playingSong)}
             element1={<p>暂无歌曲</p>}
@@ -304,7 +313,16 @@ const _Audio: FC = (): ReactElement => {
               lazyLoad={false}
               key={song?.id}
             >
-              <div className="drawer-card-child">
+              <div
+                className="drawer-card-child"
+                onClick={() => {
+                  setState(state => ({
+                    ...state,
+                    visible: false,
+                  }));
+                  push('/client/song/' + song?.id);
+                }}
+              >
                 <p>
                   {song?.name}
                   <span>{song?.artists?.map(artist => artist.nickName).join(',')}</span>

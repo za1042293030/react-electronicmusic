@@ -1,3 +1,14 @@
+.form-upload-cover {
+  padding-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+
+  .form-upload-cover-label {
+    height: 3.2rem;
+  }
+}
+
+
 .personal-center {
   background: var(--common-color);
 
@@ -7,12 +18,11 @@
       margin: 0 auto;
 
       .playlist-card-bottom {
-        padding: .5rem;
+        padding:.2rem .5rem;
         height: 100%;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        cursor: pointer;
         border-bottom: .1rem solid var(--shadow-color);
 
         .playlist-tag-container {
@@ -30,12 +40,20 @@
           }
         }
 
-        .card-info {
-          font-size: 1.3rem;
-          color: rgb(92, 92, 92);
+        .playlist-card-info {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
 
-          span {
-            padding: 0 .2rem;
+          .playlist-name {
+            cursor: pointer;
+          }
+
+          .playlist-actions {
+            .playlist-edit {
+              padding: 0 .2rem;
+              font-size: 1.2rem;
+            }
           }
         }
       }
@@ -46,9 +64,9 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        border-bottom: .1rem solid var(--shadow-color);
         background: var(--common-color);
         padding: .2rem .5rem;
+        box-shadow: 0 .5rem 1rem .1rem rgb(247, 247, 247);
 
         .personal-name {
           flex: 1;
@@ -61,38 +79,36 @@
           display: flex;
           align-items: center;
         }
-
-        .personal-info-follow {
-          display: flex;
-          height: 100%;
-
-          .personal-info-follow-btn {
-            height: 100%;
-            display: flex;
-            align-items: center;
-            padding: 0 .5rem;
-          }
-
-          .personal-info-follow-text {
-            height: 100%;
-            color: rgb(121, 121, 121);
-            display: flex;
-            align-items: center;
-
-            p {
-              display: inline-flex;
-              flex-direction: column;
-              align-items: center;
-              padding: 0 1rem;
-              font-size: 1.2rem;
-            }
-          }
-        }
       }
 
       .personal-tabs {
         margin-top: 1rem;
         padding: 0 1rem;
+
+        .upload-avatar {
+          display: flex;
+          flex-direction: column;
+          padding: 0 2rem;
+        }
+
+        .password-form {
+          padding: 0 2rem;
+        }
+
+        .msg-logout {
+          padding: 0 2rem;
+        }
+
+        .playlist-add {
+          width: 100%;
+          font-size: 1.8rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          background: rgb(247, 247, 247);
+          border-radius: 2rem;
+        }
       }
     }
   }

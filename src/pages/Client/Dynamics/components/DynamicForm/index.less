@@ -13,6 +13,7 @@
     resize: none;
     overflow: auto;
     outline: none;
+    border: .1rem solid transparent;
 
     &:focus {
       padding: .8rem;
@@ -54,6 +55,7 @@
           padding: 0 .5rem;
         }
       }
+
       span {
         color: rgb(143, 143, 143);
         font-size: 1.2rem;
@@ -79,6 +81,11 @@
       flex: 1;
       display: inline-flex;
       justify-content: flex-end;
+
+      .public-checkbox {
+        margin: .5rem;
+        height: 3.2rem;
+      }
     }
   }
 }

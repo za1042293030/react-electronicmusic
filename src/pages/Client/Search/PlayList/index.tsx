@@ -1,9 +1,10 @@
 import { XS_CWIDTH } from '@/common/constants';
 import { IUserSimple, IStyle, ISearchPlayList } from '@/common/typings';
 import { For, If, LazyLoad, Loading } from '@/components';
+import { useHistoryScroll } from '@/hooks';
 import { Table, Tag } from 'antd';
 import React, { FC, ReactElement, useContext, useEffect } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { SearchContext } from '..';
 const { Column } = Table;
 
@@ -11,7 +12,7 @@ const PlayList: FC = (): ReactElement => {
   const location = useLocation();
   const { data, total, loading, onChange, getKey } = useContext(SearchContext);
   const cWidth = document.documentElement.clientWidth;
-  const history = useHistory();
+  const { push } = useHistoryScroll();
 
   useEffect(() => {
     getKey && getKey(location.search);
@@ -19,11 +20,12 @@ const PlayList: FC = (): ReactElement => {
 
   const goToPlayList = (id: number) => {
     if (!id) return;
-    history.push('/client/playlist/' + id);
+    push('/client/playlist/' + id);
   };
 
   return (
     <Table
+      rowKey="id"
       dataSource={data as ISearchPlayList[]}
       pagination={{ pageSize: 20, position: ['bottomCenter'], total, showSizeChanger: false }}
       size={cWidth > XS_CWIDTH ? 'middle' : 'small'}
@@ -72,7 +74,7 @@ const PlayList: FC = (): ReactElement => {
             <span
               className="pointer"
               onClick={() => {
-                history.push('/client/personalcenter/' + createBy.id);
+                push('/client/personalcenter/' + createBy.id);
               }}
             >
               {createBy.nickName}

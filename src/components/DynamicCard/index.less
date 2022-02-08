@@ -14,13 +14,23 @@
       align-items: center;
     }
 
-    .time {
+    .dynamic-actions{
       flex: 1;
       display: inline-flex;
       align-items: center;
       justify-content: flex-end;
       color: rgb(151, 151, 151);
       font-size: 1.2rem;
+      .dynamic-delete{
+        padding-left:.4rem;
+      }
+    }
+
+    .private {
+      font-size: 1.2rem;
+      display: inline-flex;
+      align-items: center;
+      padding-left: .5rem;
     }
 
   }
@@ -80,10 +90,16 @@
         margin: .5rem .5rem 0;
         position: relative;
 
-        img {
+        .dynamic-picture-vertical {
           width: 100%;
           margin: 50% auto;
           transform: translateY(-50%);
+        }
+
+        .dynamic-picture-transverse {
+          height: 100%;
+          margin: auto 50%;
+          transform: translateX(-50%);
         }
 
         .perview {

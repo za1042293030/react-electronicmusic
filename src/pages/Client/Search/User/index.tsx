@@ -2,9 +2,10 @@ import { XS_CWIDTH } from '@/common/constants';
 import { ISearchUser } from '@/common/typings';
 import { Table } from 'antd';
 import React, { FC, ReactElement, useContext, useEffect } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { SearchContext } from '..';
 import { Avatar, LazyLoad, Loading } from '@/components';
+import { useHistoryScroll } from '@/hooks';
 
 const { Column } = Table;
 
@@ -12,7 +13,7 @@ const User: FC = (): ReactElement => {
   const location = useLocation();
   const { data, total, loading, onChange, getKey } = useContext(SearchContext);
   const cWidth = document.documentElement.clientWidth;
-  const history = useHistory();
+  const { push } = useHistoryScroll();
 
   useEffect(() => {
     getKey && getKey(location.search);
@@ -20,11 +21,12 @@ const User: FC = (): ReactElement => {
 
   const goToPersonalCenter = (id: number) => {
     if (!id) return;
-    history.push('/client/personalcenter/' + id);
+    push('/client/personalcenter/' + id);
   };
 
   return (
     <Table
+      rowKey="id"
       dataSource={data as ISearchUser[]}
       pagination={{ pageSize: 20, position: ['bottomCenter'], total, showSizeChanger: false }}
       size={cWidth > XS_CWIDTH ? 'middle' : 'small'}

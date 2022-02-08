@@ -7,7 +7,6 @@ const saveUserInfo =
   async dispatch => {
     const userInfo = await api.getUserInfo(id);
     if (!userInfo) return;
-    localStorage.setItem('userInfo', JSON.stringify(userInfo));
     dispatch({
       type: UserAction.SAVE_USER_INFO,
       payload: userInfo,

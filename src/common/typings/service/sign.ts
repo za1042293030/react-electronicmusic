@@ -2,12 +2,11 @@ interface IToken {
   accessToken: string;
 }
 interface IUserInfo {
-  id: number;
-  nickName: string;
-  userName: string;
-  phone: string;
-  avatar: string;
-  role: {
+  id?: number;
+  nickName?: string;
+  userName?: string;
+  avatar?: string;
+  role?: {
     id: number;
     isAdmin: boolean;
   };
@@ -25,4 +24,9 @@ interface IRegister {
   phone: string;
 }
 
-export type { IToken, IUserInfo, ILogin, IRegister };
+interface IChangePassword {
+  oldpassword: string;
+  newpassword: string;
+}
+
+export type { IToken, IUserInfo, ILogin, IRegister, IChangePassword };

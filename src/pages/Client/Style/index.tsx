@@ -171,6 +171,7 @@ const Style: FC<IRouterProps> = ({ route, location: { pathname } }): ReactElemen
               onChange={onChange}
               onMouseEnter={onMouseEnter}
               chooseId={state.chooseId}
+              emptyEl
             />
             <TagGroup tags={state.subTags} onChange={onChange} chooseId={state.chooseId} />
           </div>

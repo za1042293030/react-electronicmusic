@@ -1,3 +1,51 @@
+#playlist-inscroll {
+  max-height: 36.4rem;
+  overflow: auto;
+
+  .playlist-card-bottom {
+    padding: .5rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-bottom: .1rem solid var(--shadow-color);
+
+    .playlist-tag-container {
+      width: 100%;
+      flex: 1;
+      overflow: auto;
+
+      &::-webkit-scrollbar {
+        height: 0;
+        width: 0;
+      }
+
+      .playlist-tag {
+        margin-bottom: .4rem;
+      }
+    }
+
+    .playlist-card-info {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .playlist-name {
+        font-size: 1.3rem;
+        color: rgb(92, 92, 92);
+      }
+
+      .playlist-actions {
+        .playlist-edit {
+          padding: 0 .2rem;
+          font-size: 1.2rem;
+        }
+      }
+    }
+  }
+
+}
+
 .song {
   padding: 1rem 0;
 
@@ -60,6 +108,7 @@
 
           .song-card-name {
             font-size: 1.6rem;
+
           }
 
           .song-card-describe {
@@ -103,7 +152,8 @@
             }
 
             .song-card-right-bottom-time {
-              padding-left:.4rem;
+              padding-left: .4rem;
+
               &::-webkit-scrollbar {
                 height: 0;
                 width: 0;
@@ -124,6 +174,17 @@
 
         .song-comment-list-text {
           padding: 1.2rem 0;
+          display: flex;
+          align-items: center;
+
+          .song-actions {
+            display: inline-block;
+            font-size: 2rem;
+
+            &>span {
+              cursor: pointer;
+            }
+          }
         }
       }
     }

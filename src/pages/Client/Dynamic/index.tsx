@@ -1,33 +1,41 @@
 import { CommentType } from '@/common/enums';
 import { IDynamicWithComment, IParams, IRouterProps } from '@/common/typings';
 import { DynamicCard, If } from '@/components';
-import { useComment, usePlayList, useSetTitle } from '@/hooks';
+import { useComment, useHistoryScroll, usePlayList, useSetTitle } from '@/hooks';
 import api from '@/services';
 import { LeftOutlined } from '@ant-design/icons';
 import { Skeleton } from 'antd';
+import { isEmpty } from 'lodash';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import './index.less';
 
 interface IState {
-  dynamic: IDynamicWithComment | Record<string, any>;
+  dynamic: IDynamicWithComment | undefined;
   loading: boolean;
+  submitLoading: boolean;
+  replyLoading: boolean;
+  subReplyLoading: boolean;
 }
 
-const PersonalCenter: FC<IRouterProps<IParams>> = ({
+const Dynamic: FC<IRouterProps<IParams>> = ({
   route,
   match: {
     params: { id },
   },
+  history,
 }): ReactElement => {
   useSetTitle(route.meta?.title!);
-  const history = useHistory();
   const { addPlayList } = usePlayList();
+  const { push } = useHistoryScroll();
 
-  const [{ dynamic, loading }, setState] = useState<IState>({
-    dynamic: {},
-    loading: false,
-  });
+  const [{ dynamic, loading, submitLoading, replyLoading, subReplyLoading }, setState] =
+    useState<IState>({
+      dynamic: undefined,
+      loading: true,
+      submitLoading: false,
+      replyLoading: false,
+      subReplyLoading: false,
+    });
   const { sendComment, sendReplyComment } = useComment(CommentType.DYNAMIC, parseInt(id));
 
   const back = () => {
@@ -44,10 +52,14 @@ const PersonalCenter: FC<IRouterProps<IParams>> = ({
       setState(state => ({
         ...state,
         loading: false,
-        dynamic: dynamic ?? {},
+        dynamic: dynamic ?? undefined,
       }));
     })();
   }, []);
+
+  useEffect(() => {
+    if (!loading && isEmpty(dynamic)) push('/404');
+  }, [dynamic, loading]);
 
   return (
     <div className="dynamic-detail">
@@ -65,10 +77,44 @@ const PersonalCenter: FC<IRouterProps<IParams>> = ({
                 <DynamicCard
                   openComment
                   {...(dynamic as IDynamicWithComment)}
-                  onSendComment={sendComment}
-                  onSendReplyComment={sendReplyComment}
+                  onSendComment={async value => {
+                    setState(state => ({
+                      ...state,
+                      submitLoading: true,
+                    }));
+                    await sendComment(value);
+                    setState(state => ({
+                      ...state,
+                      submitLoading: false,
+                    }));
+                  }}
+                  onSendReplyComment={async (value, commentId) => {
+                    setState(state => ({
+                      ...state,
+                      replyLoading: true,
+                    }));
+                    await sendReplyComment(value, commentId);
+                    setState(state => ({
+                      ...state,
+                      replyLoading: false,
+                    }));
+                  }}
+                  onSendSubReplyComment={async (value, commentId) => {
+                    setState(state => ({
+                      ...state,
+                      subReplyLoading: true,
+                    }));
+                    await sendReplyComment(value, commentId);
+                    setState(state => ({
+                      ...state,
+                      subReplyLoading: false,
+                    }));
+                  }}
                   onClickSong={addPlayList}
                   id={parseInt(id)}
+                  submitLoading={submitLoading}
+                  replyLoading={replyLoading}
+                  subReplyLoading={subReplyLoading}
                 />
               }
             />
@@ -78,4 +124,4 @@ const PersonalCenter: FC<IRouterProps<IParams>> = ({
     </div>
   );
 };
-export default PersonalCenter;
+export default Dynamic;

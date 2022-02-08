@@ -7,7 +7,12 @@ import React, { FC, memo, ReactElement, useEffect, useState } from 'react';
 import ReplyForm from '../ReplyForm';
 import { IProps, IState } from './interface';
 
-const SubComment: FC<IProps> = ({ id, goToPersonalCenter, onSendReplyComment }): ReactElement => {
+const SubComment: FC<IProps> = ({
+  id,
+  goToPersonalCenter,
+  subReplyLoading,
+  onSendSubReplyComment,
+}): ReactElement => {
   const [{ pageIndex, comments, total, loading }, setState] = useState<IState>({
     pageIndex: 1,
     comments: [],
@@ -69,7 +74,7 @@ const SubComment: FC<IProps> = ({ id, goToPersonalCenter, onSendReplyComment }):
           dataSource={comments}
           size="small"
           renderItem={reply => (
-            <li>
+            <li key={reply.id}>
               <Comment
                 actions={[
                   <span key="comment-basic-reply-to" onClick={() => openReplyForm(reply.id)}>
@@ -79,7 +84,7 @@ const SubComment: FC<IProps> = ({ id, goToPersonalCenter, onSendReplyComment }):
                 avatar={
                   <Avatar
                     imgSrc={reply.createBy?.avatar}
-                    size={2.8}
+                    size={2.6}
                     onClick={() => goToPersonalCenter && goToPersonalCenter(reply.createBy?.id)}
                   />
                 }
@@ -111,8 +116,9 @@ const SubComment: FC<IProps> = ({ id, goToPersonalCenter, onSendReplyComment }):
                 element1={
                   <ReplyForm
                     onSendComment={value =>
-                      onSendReplyComment && onSendReplyComment(value, reply.id)
+                      onSendSubReplyComment && onSendSubReplyComment(value, reply.id)
                     }
+                    submitLoading={subReplyLoading}
                     btnText="回复"
                   />
                 }

@@ -32,7 +32,8 @@ function ajax<T = unknown>(
       if (msg.includes('过期')) {
         store.dispatch(clearUserInfo());
       }
-      message.error(status + ' ' + msg);
+      console.log('error status:'+status);
+      message.error(msg);
       // return { code: RESPONSE_CODE.FAIL, message: status + ' ' + msg, data: null };
     }
   );

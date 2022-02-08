@@ -1,11 +1,10 @@
 import { XS_CWIDTH } from '@/common/constants/clientwidth';
 import { IRouterProps, ISongSimple } from '@/common/typings';
 import { MusicCard, For, If, Empty } from '@/components';
-import { usePlayList, useSetTitle } from '@/hooks';
+import { useHistoryScroll, usePlayList, useSetTitle } from '@/hooks';
 import { Tag } from 'antd';
 import React, { FC, ReactElement, useCallback } from 'react';
 import { useContext } from 'react';
-import { useHistory } from 'react-router-dom';
 import { StyleContext } from '..';
 import './index.less';
 
@@ -15,7 +14,7 @@ const Songs: FC<IRouterProps> = ({ route }): ReactElement => {
   const list = useContext(StyleContext);
   const cWidth = document.documentElement.clientWidth;
   const { addPlayList } = usePlayList();
-  const history = useHistory();
+  const {push} = useHistoryScroll();
 
   const forChildren = useCallback(
     (song: ISongSimple) => (
@@ -32,7 +31,7 @@ const Songs: FC<IRouterProps> = ({ route }): ReactElement => {
             className="song-card-bottom"
             title="点击前往歌曲详情页"
             onClick={() => {
-              history.push('/client/song/' + song.id);
+              push('/client/song/' + song.id);
             }}
           >
             <div className="song-tag-container">

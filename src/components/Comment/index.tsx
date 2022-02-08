@@ -4,15 +4,22 @@ import { isEmpty } from 'lodash';
 import moment from 'moment';
 import React, { FC, memo, ReactElement, useCallback, useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { useHistory } from 'react-router-dom';
 import { Avatar, Empty, If } from '..';
 import { IProps, IState } from './interface';
 import './index.less';
 import SubComment from './SubComment';
 import ReplyForm from './ReplyForm';
+import { useHistoryScroll } from '@/hooks';
 
-const Comment: FC<IProps> = ({ type, id, onSendReplyComment }): ReactElement => {
-  const history = useHistory();
+const Comment: FC<IProps> = ({
+  type,
+  id,
+  replyLoading,
+  subReplyLoading,
+  onSendReplyComment,
+  onSendSubReplyComment,
+}): ReactElement => {
+  const { push } = useHistoryScroll();
   const [{ hasMore, comments, pageIndex }, setState] = useState<IState>({
     hasMore: true,
     comments: [],
@@ -21,8 +28,7 @@ const Comment: FC<IProps> = ({ type, id, onSendReplyComment }): ReactElement => 
 
   const goToPersonalCenter = useCallback((id?: number) => {
     if (!id) return;
-    history.push('/client/personalcenter/' + id);
-    // window.open('/client/personalcenter/' + id);
+    push('/client/personalcenter/' + id);
   }, []);
 
   useEffect(() => {
@@ -98,7 +104,7 @@ const Comment: FC<IProps> = ({ type, id, onSendReplyComment }): ReactElement => 
             dataSource={comments}
             size="small"
             renderItem={comment => (
-              <li>
+              <li key={comment.id}>
                 <_Comment
                   className="comment-item"
                   actions={[
@@ -133,7 +139,8 @@ const Comment: FC<IProps> = ({ type, id, onSendReplyComment }): ReactElement => 
                         id={comment.id}
                         goToPersonalCenter={goToPersonalCenter}
                         type={type}
-                        onSendReplyComment={onSendReplyComment}
+                        onSendSubReplyComment={onSendSubReplyComment}
+                        subReplyLoading={subReplyLoading}
                       />
                     }
                   />
@@ -145,6 +152,7 @@ const Comment: FC<IProps> = ({ type, id, onSendReplyComment }): ReactElement => 
                       onSendComment={value =>
                         onSendReplyComment && onSendReplyComment(value, comment.id)
                       }
+                      submitLoading={replyLoading}
                       btnText="回复"
                     />
                   }

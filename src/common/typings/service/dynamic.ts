@@ -25,6 +25,7 @@ interface IDynamic {
   commentedCount: number;
   song?: IDynamicSong;
   pictures?: IDynamicPic[];
+  isPublish: boolean;
 }
 
 interface IDynamicWithComment extends IDynamic {
@@ -34,6 +35,7 @@ interface SendDynamicInfo {
   content: string;
   songId?: number;
   pictureIds?: number[];
+  isPrivate: boolean;
 }
 export type {
   IDynamicSong,

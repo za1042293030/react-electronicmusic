@@ -26,6 +26,8 @@ interface IPlayListSimple {
   createBy: IUserSimple;
   styles: IStyle[];
   cover: string | null;
+  describe: string;
+  playListPopVisible:boolean;
 }
 
 export type { ISongSimple, IStyle, IUserSimple, IPlayListSimple };

@@ -6,7 +6,7 @@ import {
   ISearchSong,
   ISearchUser,
 } from '@/common/typings';
-import { useSetTitle } from '@/hooks';
+import { useHistoryScroll, useSetTitle } from '@/hooks';
 import { Affix, Menu } from 'antd';
 import React, {
   createContext,
@@ -50,7 +50,7 @@ interface IState {
   key: string;
 }
 
-const Search: FC<IRouterProps> = ({ route, location: { search }, history }): ReactElement => {
+const Search: FC<IRouterProps> = ({ route, location: { search } }): ReactElement => {
   useSetTitle(route.meta?.title);
   const [{ data, searchType, loading, total, pageSize, pageIndex, key }, setState] =
     useState<IState>({
@@ -62,6 +62,7 @@ const Search: FC<IRouterProps> = ({ route, location: { search }, history }): Rea
       pageIndex: 1,
       key: parse(search)['?key'] as string,
     });
+  const { push } = useHistoryScroll();
 
   const onSelect = useCallback(({ key }: { key: Key }) => {
     setState(state => ({
@@ -131,7 +132,7 @@ const Search: FC<IRouterProps> = ({ route, location: { search }, history }): Rea
       data: [],
       total: 0,
     }));
-    history.push('/client/search/' + searchType + (key ? '?key=' + key : ''));
+    push('/client/search/' + searchType + (key ? '?key=' + key : ''));
   }, [searchType]);
 
   useEffect(() => {

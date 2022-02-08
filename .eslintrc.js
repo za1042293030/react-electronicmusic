@@ -46,6 +46,7 @@ module.exports = {
 		"react/display-name": "off",
 		"react/prop-types": "off",
 		"@typescript-eslint/no-explicit-any": "off",
-		"react/jsx-key": "off"
+		"react/jsx-key": "off",
+		"@typescript-eslint/ban-types": "off"
 	}
 };

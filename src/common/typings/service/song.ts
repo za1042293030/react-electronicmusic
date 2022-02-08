@@ -3,6 +3,6 @@ import { ISongSimple } from '.';
 interface ISong extends ISongSimple {
   describe?: string;
   createTime: string;
-  commentCount: number;
+  commentedCount: number;
 }
 export type { ISong };

@@ -2,9 +2,10 @@ import { Button, Input } from 'antd';
 import React, { FC, ReactElement, useState } from 'react';
 import { IProps, IState } from './interface';
 import './index.less';
+
 const { TextArea } = Input;
 
-const ReplyForm: FC<IProps> = ({ onSendComment, btnText }): ReactElement => {
+const ReplyForm: FC<IProps> = ({ onSendComment, btnText, submitLoading }): ReactElement => {
   const [{ commentValue }, setState] = useState<IState>({
     commentValue: '',
   });
@@ -25,6 +26,7 @@ const ReplyForm: FC<IProps> = ({ onSendComment, btnText }): ReactElement => {
         <Button
           htmlType="submit"
           type="primary"
+          loading={submitLoading}
           onClick={() => {
             if (onSendComment) {
               onSendComment(commentValue);

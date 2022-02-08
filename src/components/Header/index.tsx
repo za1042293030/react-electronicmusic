@@ -9,18 +9,18 @@ import React, {
   useState,
   useEffect,
 } from 'react';
-import { Link, NavLink, useHistory } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import Avatar from '@/components/Avatar';
 import './index.less';
 import { IProps } from './props';
 import { Popup, IPopupRef, For, SearchInput, If } from '@/components';
-import { Affix, Badge, List, Tooltip } from 'antd';
+import { Affix, Badge, List, Tooltip, Typography } from 'antd';
 import { LoginOutlined } from '@ant-design/icons';
 import { MD_CWIDTH } from '@/common/constants/clientwidth';
 import { ILink, ISongSimple } from '@/common/typings';
 import api from '@/services';
-import { useUserInfo } from '@/hooks';
-
+import { useHistoryScroll, useUserInfo } from '@/hooks';
+const { Title } = Typography;
 interface IState {
   searchList: ISongSimple[];
   loading: boolean;
@@ -31,29 +31,26 @@ const Header: FC<IProps> = ({ linkList }): ReactElement => {
     loading: true,
   });
 
-  const history = useHistory();
-  const { userInfo, isLogin } = useUserInfo();
+  const { push } = useHistoryScroll();
+  const location = useLocation();
+  const { userInfo, isLogin, id } = useUserInfo();
 
   const goToSearchPage = useCallback((value: string): void => {
-    if (
-      !history.location.pathname.includes('/client/search') &&
-      history.location.pathname !== '/client/search'
-    ) {
-      history.push('/client/search/song' + (value ? '?key=' + value : ''));
+    if (!location.pathname.includes('/client/search') && location.pathname !== '/client/search') {
+      push('/client/search/song' + (value ? '?key=' + value : ''));
     } else {
-      history.push(history.location.pathname + '?key=' + value);
+      push(location.pathname + '?key=' + value);
     }
   }, []);
 
   const goToPersonalCenter = useCallback(() => {
     const cWidth = document.documentElement.clientWidth;
     if (isLogin) {
-      history.push('/client/personalcenter/' + userInfo.id);
-      return;
+      push('/client/personalcenter/' + id);
     } else if (cWidth < MD_CWIDTH) {
-      history.push('/client/sign/login');
+      push('/client/sign/login');
     }
-  }, []);
+  }, [id]);
 
   const dynamicRef = useRef<IPopupRef>(null);
 
@@ -68,25 +65,30 @@ const Header: FC<IProps> = ({ linkList }): ReactElement => {
   }, []);
   const searchInputChilren = useMemo(
     () => (
-      <List
-        loading={loading}
-        size="small"
-        dataSource={searchList}
-        renderItem={song => (
-          <List.Item
-            style={{ cursor: 'pointer' }}
-            onClick={() => history.push('/client/search?key=' + song.name)}
-            key={song.id}
-          >
-            <p className="list-item">
-              <span className="song-name">{song.name}</span>
-              <span className="song-artists">
-                {song.artists.map(artist => artist.nickName).join(',')}
-              </span>
-            </p>
-          </List.Item>
-        )}
-      />
+      <>
+        <Title level={5} className="search-input-recommend">
+          为您推荐：
+        </Title>
+        <List
+          loading={loading}
+          size="small"
+          dataSource={searchList}
+          renderItem={song => (
+            <List.Item
+              style={{ cursor: 'pointer' }}
+              onClick={() => push('/client/search?key=' + song.name)}
+              key={song.id}
+            >
+              <p className="list-item">
+                <span className="song-name">{song.name}</span>
+                <span className="song-artists">
+                  {song.artists.map(artist => artist.nickName).join(',')}
+                </span>
+              </p>
+            </List.Item>
+          )}
+        />
+      </>
     ),
     [loading, history]
   );
@@ -155,9 +157,9 @@ const Header: FC<IProps> = ({ linkList }): ReactElement => {
         </div>
         <div className="header-user transition-5">
           <Avatar
-            imgSrc={!isLogin ? undefined : userInfo.avatar}
+            imgSrc={!isLogin ? undefined : userInfo?.avatar}
             size={4}
-            title={!isLogin ? '未登录' : userInfo.nickName}
+            title={!isLogin ? '未登录' : userInfo?.nickName}
             onClick={goToPersonalCenter}
           />
           <If flag={!isLogin} element1={unLoginUserList} element2={loggedUserList} />

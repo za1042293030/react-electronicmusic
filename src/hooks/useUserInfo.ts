@@ -1,9 +1,11 @@
-import { IDispatch, IStoreState, IUserInfo } from '@/common/typings';
+import { TOKEN } from '@/common/constants';
+import { IDispatch, IJwtPayload, IStoreState, IUserInfo } from '@/common/typings';
 import {
   saveUserInfo as _saveUserInfo,
   saveAdminInfo as _saveAdminInfo,
   clearUserInfo as _clearUserInfo,
 } from '@/store/actions';
+import { decode } from 'jsonwebtoken';
 import { isEmpty } from 'lodash';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 
@@ -22,11 +24,12 @@ function useUserInfo() {
   };
   return {
     userInfo,
-    isLogin: !isEmpty(userInfo),
-    isAdmin: isEmpty(userInfo) ? false : userInfo?.role.isAdmin,
+    isLogin: localStorage.getItem(TOKEN) ? true : false,
+    isAdmin: !localStorage.getItem(TOKEN) ? false : (decode(localStorage.getItem(TOKEN) as string) as IJwtPayload)?.isAdmin,
     saveUserInfo,
     saveAdminInfo,
     clearUserInfo,
+    id: (decode(localStorage.getItem(TOKEN) as string) as IJwtPayload)?.id,
   };
 }
 

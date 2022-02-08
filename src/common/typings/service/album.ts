@@ -4,6 +4,6 @@ interface IAlbum extends ISearchAlbum {
   songs: ISongSimple[];
   describe?: string;
   createTime: string;
-  commentCount: number;
+  commentedCount: number;
 }
 export type { IAlbum };

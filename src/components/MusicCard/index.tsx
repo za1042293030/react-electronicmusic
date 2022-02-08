@@ -38,7 +38,7 @@ const MusicCard: VFC<IProps> = ({
       <div className="card-top transition-2" onClick={() => onClick && onClick(fileSrc)}>
         <If
           flag={lazyLoad}
-          element1={<LazyLoad loading={<img src={LoadingImg} />}>{img}</LazyLoad>}
+          element1={<LazyLoad loading={<img src={LoadingImg} width={imgWidth + 'rem'}/>}>{img}</LazyLoad>}
           element2={img}
         />
         <If flag={playBtn} element1={<div className="play-btn"></div>} />

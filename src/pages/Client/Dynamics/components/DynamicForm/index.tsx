@@ -1,6 +1,6 @@
 import { BaseResponse, IDynamicSong, IFile, ISongSimple } from '@/common/typings';
-import { Empty, For, If, Loading, MusicCard, SearchInput } from '@/components';
-import { Button, Upload, Image, Modal, message } from 'antd';
+import { Empty, For, If, MusicCard, SearchInput } from '@/components';
+import { Button, Upload, Image, Modal, message, Checkbox, Skeleton } from 'antd';
 import { UploadFile } from 'antd/lib/upload/interface';
 import React, { FC, ReactElement, useCallback, useMemo, useRef, useState } from 'react';
 import DefaultSongImg from '@/assets/emptyImg.jpg';
@@ -19,6 +19,7 @@ interface IState {
   song: IDynamicSong | undefined;
   songs: IDynamicSong[] | undefined | null;
   loading: boolean;
+  submitLoading: boolean;
 }
 
 const DynamicForm: FC<IProps> = ({ onClick }): ReactElement => {
@@ -29,7 +30,9 @@ const DynamicForm: FC<IProps> = ({ onClick }): ReactElement => {
     song: undefined,
     songs: [],
     loading: true,
+    submitLoading: false,
   });
+  const isPrivate = useRef(false);
 
   const onCencel = useCallback(() => {
     setState(state => ({ ...state, modalVisible: false }));
@@ -136,20 +139,34 @@ const DynamicForm: FC<IProps> = ({ onClick }): ReactElement => {
     }
     setState(state => ({ ...state, songs: isEmpty(songs) ? [] : songs, loading: false }));
   }, []);
+
+  const onChange = () => {
+    isPrivate.current = !isPrivate.current;
+  };
+
   const sendDynamic = useCallback(async () => {
     const content = contentRef.current?.value;
     if (!dynamicContentValid(content)) return;
+    setState(state => ({ ...state, submitLoading: true }));
     message.loading('发布中，请稍候');
     const flag = await api.sendDynamic({
       content: content!,
       songId: isEmpty(state.song) ? undefined : state.song!.id,
       pictureIds: !isEmpty(state.fileList)
-        ? state.fileList.map(file => file.response?.data.id!)
+        ? (state.fileList
+            .map(file => {
+              if (file.status === 'success' || file.status === 'done')
+                return file.response?.data.id;
+            })
+            .filter(id => id !== undefined) as number[])
         : undefined,
+      isPrivate: isPrivate.current,
     });
     message.destroy();
+    setState(state => ({ ...state, submitLoading: false }));
     if (flag) {
-      message.success('发布成功，审核马上就好');
+      if (isPrivate.current) message.success('发送成功');
+      else message.success('发布成功，审核马上就好');
       contentRef.current!.value = '';
       setState(state => ({ ...state, fileList: [], songId: undefined, song: undefined }));
     } else {
@@ -184,19 +201,24 @@ const DynamicForm: FC<IProps> = ({ onClick }): ReactElement => {
               action={BASE_URL + '/api/file/uploadImage'}
               listType="picture-card"
               fileList={state.fileList}
-              onChange={({ fileList }) => {
+              onChange={({ file, fileList }) => {
+                if (file && file.status === 'error') message.error(file.response?.message);
                 setState(state => ({ ...state, fileList }));
               }}
               onPreview={() => setState(state => ({ ...state, imagePreviewVisible: true }))}
               headers={{
                 token: localStorage.getItem(TOKEN) ?? '',
               }}
+              name="img"
             >
               {state.fileList.length < 9 && <PlusOutlined style={{ fontSize: '2rem' }} />}
             </Upload>
           </div>
           <div className="send">
-            <Button type="primary" onClick={sendDynamic}>
+            <Checkbox className="public-checkbox" onChange={onChange}>
+              私密
+            </Checkbox>
+            <Button type="primary" onClick={sendDynamic} loading={state.submitLoading}>
               发布
             </Button>
           </div>
@@ -212,7 +234,7 @@ const DynamicForm: FC<IProps> = ({ onClick }): ReactElement => {
               {selectSongsChildren}
             </For>
           }
-          element2={<If flag={!state.loading} element1={<Empty />} element2={<Loading />} />}
+          element2={<If flag={!state.loading} element1={<Empty />} element2={<Skeleton active />} />}
         />
       </Modal>
     </div>

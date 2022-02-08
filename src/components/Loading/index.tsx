@@ -13,7 +13,7 @@ const Loading: FC<IProps> = ({ golbal, width, height }): ReactElement => {
   return (
     <div
       className={'loading' + (golbal ? ' golbal' : '')}
-      style={{ width: width + 'rem', height: height + 'rem' }}
+      style={{ width: width && width + 'rem', height: height && height + 'rem' }}
     >
       <Spin indicator={antIcon} />
     </div>

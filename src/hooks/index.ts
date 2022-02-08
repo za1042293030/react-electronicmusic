@@ -7,3 +7,4 @@ export * from './usePlayList';
 export * from './useUserInfo';
 export * from './useSign';
 export * from './useComment';
+export * from './useHistoryScroll';

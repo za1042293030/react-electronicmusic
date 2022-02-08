@@ -1,11 +1,10 @@
 import { IRouterProps, ISearchAlbum } from '@/common/typings';
 import { MusicCard, For, If, Loading, Empty } from '@/components';
-import { useSetTitle } from '@/hooks';
+import { useHistoryScroll, useSetTitle } from '@/hooks';
 import api from '@/services';
 import { Tag } from 'antd';
 import { isEmpty } from 'lodash';
 import React, { FC, ReactElement, useCallback, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import './index.less';
 
 interface IState {
@@ -19,7 +18,7 @@ const Albums: FC<IRouterProps> = ({ route }): ReactElement => {
     loading: false,
     list: [],
   });
-  const history = useHistory();
+  const { push } = useHistoryScroll();
 
   useEffect(() => {
     (async () => {
@@ -39,7 +38,7 @@ const Albums: FC<IRouterProps> = ({ route }): ReactElement => {
   const goToAlbum = useCallback((id: number) => {
     if (!id) return;
     window.scrollTo(0, 0);
-    history.push('/client/album/' + id);
+    push('/client/album/' + id);
   }, []);
 
   const forChildren = useCallback(

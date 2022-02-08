@@ -1,24 +1,26 @@
 import { Avatar, For, If, LazyLoad, MusicCard } from '@/components';
 import React, { FC, memo, ReactElement, useCallback, useMemo, useState } from 'react';
 import './index.less';
-import { EyeOutlined, LikeOutlined, MessageOutlined, ShareAltOutlined } from '@ant-design/icons';
-import { Image } from 'antd';
+import {
+  EyeInvisibleOutlined,
+  EyeOutlined,
+  MessageOutlined,
+} from '@ant-design/icons';
+import { Image, Popconfirm } from 'antd';
 import { IProps } from './props';
 import { XS_CWIDTH } from '@/common/constants/clientwidth';
 import { isEmpty } from 'lodash';
-import { IComment, IDynamicPic, IDynamicWithComment } from '@/common/typings';
+import { IDynamicPic, IDynamicWithComment } from '@/common/typings';
 import moment from 'moment';
 import { Comment } from '..';
 import { CommentType } from '@/common/enums';
 import ReplyForm from '../Comment/ReplyForm';
-import { useHistory } from 'react-router-dom';
+import { useHistoryScroll, useUserInfo } from '@/hooks';
 
 interface IState {
   visible: boolean;
   current: number;
-  hasMore: boolean;
-  comments: IComment[];
-  pageIndex: number;
+  popVisible: boolean;
 }
 
 const DynamicCard: FC<IProps & IDynamicWithComment> = ({
@@ -26,26 +28,29 @@ const DynamicCard: FC<IProps & IDynamicWithComment> = ({
   createTime,
   content,
   createBy,
-  likedCount,
   commentedCount,
   song,
   pictures,
+  submitLoading,
+  replyLoading,
   openComment,
-  onLike,
+  subReplyLoading,
+  isPublish,
+  deleteLoading,
   onComment,
-  onShare,
   onClickSong,
   onSendComment,
   onSendReplyComment,
+  onSendSubReplyComment,
+  onDelete,
 }): ReactElement => {
-  const [{ visible, current }, setState] = useState<IState>({
+  const [{ visible, current, popVisible }, setState] = useState<IState>({
     visible: false,
     current: 0,
-    hasMore: true,
-    comments: [],
-    pageIndex: 1,
+    popVisible: false,
   });
-  const history = useHistory();
+  const { push } = useHistoryScroll();
+  const { userInfo } = useUserInfo();
   const pictureContainerChildren = useCallback(
     (picture: IDynamicPic, index: number) => (
       <div
@@ -60,7 +65,14 @@ const DynamicCard: FC<IProps & IDynamicWithComment> = ({
         key={picture?.id}
       >
         <LazyLoad>
-          <img src={picture.src} />
+          <img
+            src={picture.src}
+            onLoad={e => {
+              const target = e.target as HTMLImageElement;
+              if (target.width > target.height) target.className = 'dynamic-picture-transverse';
+              else target.className = 'dynamic-picture-vertical';
+            }}
+          />
         </LazyLoad>
         <div className="perview">
           <EyeOutlined style={{ color: 'white', fontSize: '2rem', fontWeight: 'bolder' }} />
@@ -110,7 +122,7 @@ const DynamicCard: FC<IProps & IDynamicWithComment> = ({
           <div
             className="card-child"
             onClick={() => {
-              history.push('/client/song/' + song?.id);
+              push('/client/song/' + song?.id);
             }}
           >
             <p>
@@ -125,9 +137,66 @@ const DynamicCard: FC<IProps & IDynamicWithComment> = ({
     <div className="dynamic-card">
       <div className="head">
         <div className="dynamic-card-left">
-          <Avatar size={4} title={createBy?.nickName} imgSrc={createBy?.avatar}></Avatar>
+          <Avatar
+            size={4}
+            title={createBy?.nickName}
+            imgSrc={createBy?.avatar}
+            onClick={() => {
+              push('/client/personalcenter/' + createBy?.id);
+            }}
+          ></Avatar>
         </div>
-        <p className="time">{moment(createTime).utcOffset(8).fromNow()}</p>
+        <div className="dynamic-actions">
+          <span>{moment(createTime).utcOffset(8).fromNow()} </span>
+          <If
+            flag={deleteLoading !== undefined && userInfo?.id === createBy?.id}
+            element1={
+              <>
+                <Popconfirm
+                  title="确定要删除吗？"
+                  onConfirm={async () => {
+                    onDelete && (await onDelete(id));
+                    setState(state => ({
+                      ...state,
+                      popVisible: false,
+                    }));
+                  }}
+                  onCancel={() =>
+                    setState(state => ({
+                      ...state,
+                      popVisible: false,
+                    }))
+                  }
+                  okText="确认"
+                  cancelText="取消"
+                  okButtonProps={{ loading: deleteLoading }}
+                  visible={popVisible}
+                >
+                  <a
+                    className="dynamic-delete"
+                    onClick={() =>
+                      setState(state => ({
+                        ...state,
+                        popVisible: true,
+                      }))
+                    }
+                  >
+                    删除
+                  </a>
+                </Popconfirm>
+              </>
+            }
+          />
+        </div>
+        <If
+          flag={isPublish || isPublish === undefined}
+          element2={
+            <span className="private" title="仅自己可见">
+              私密
+              <EyeInvisibleOutlined style={{ padding: '0 .2rem' }} />
+            </span>
+          }
+        />
       </div>
       <div
         className="dynamic-card-content"
@@ -153,31 +222,27 @@ const DynamicCard: FC<IProps & IDynamicWithComment> = ({
       <div className="dynamic-card-bottom">
         <div className="dynamic-card-icon">
           <div>
-            <LikeOutlined
-              style={{ fontSize: '1.6rem', cursor: 'pointer' }}
-              onClick={() => onLike && onLike(id)}
-            />
-            <span className="dynamic-icon-text">{likedCount}</span>
-          </div>
-          <div>
             <MessageOutlined
               style={{ fontSize: '1.6rem', cursor: 'pointer' }}
               onClick={() => onComment && onComment(id)}
             />
             <span className="dynamic-icon-text">{commentedCount}</span>
           </div>
-          <ShareAltOutlined
-            style={{ fontSize: '1.6rem', cursor: 'pointer' }}
-            onClick={() => onShare && onShare(id)}
-          />
         </div>
       </div>
       <If
         flag={openComment}
         element1={
           <>
-            <ReplyForm onSendComment={onSendComment} />
-            <Comment type={CommentType.DYNAMIC} id={id} onSendReplyComment={onSendReplyComment} />
+            <ReplyForm onSendComment={onSendComment} submitLoading={submitLoading} />
+            <Comment
+              type={CommentType.DYNAMIC}
+              id={id}
+              onSendReplyComment={onSendReplyComment}
+              onSendSubReplyComment={onSendSubReplyComment}
+              replyLoading={replyLoading}
+              subReplyLoading={subReplyLoading}
+            />
           </>
         }
       />

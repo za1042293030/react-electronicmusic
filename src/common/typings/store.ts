@@ -15,7 +15,7 @@ type IDispatchAsync<T = any> = Dispatch<IActionFunc<T>>;
 type IDispatch<T = any> = IDispatchSync<T> & IDispatchAsync<T>;
 
 type IStoreState = {
-  LoginReducer: IUserInfo | Record<string, any>;
+  LoginReducer: IUserInfo;
   AudioReducer: IDynamicSong[];
 };
 

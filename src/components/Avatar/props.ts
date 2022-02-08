@@ -3,6 +3,7 @@ interface IProps {
   imgSrc?: string;
   title?: string;
   size?: number;
+  editIcon?: boolean;
   onClick?: (id?: number) => void;
 }
 export type { IProps };

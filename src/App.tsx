@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect } from 'react';
 import { RoutingGuard } from '@/components';
-import { useGetThemeColor, useUserInfo } from './hooks';
+import { useUserInfo } from './hooks';
 import { DEFAULT_TITLE, TOKEN } from './common/constants';
 import routerConfig from './router';
 import './App.less';
@@ -13,6 +13,7 @@ function App(): ReactElement {
   useEffect(() => {
     document.title = DEFAULT_TITLE;
     document.documentElement.style.fontSize = '62.5%';
+    window.scroll(0, 0);
     /* const preventTokenUpdate = (event: StorageEvent) => {
       localStorage.setItem(event.key!, event.oldValue!);
     }; */
@@ -33,7 +34,6 @@ function App(): ReactElement {
       // window.removeEventListener('storage', preventTokenUpdate);
     };
   }, []);
-  useGetThemeColor();
   return (
     <div className="app">
       <RoutingGuard routerConfig={routerConfig} />

@@ -1,9 +1,28 @@
 import { IPlayListSimple, ISong } from '.';
 
 interface IPlayList extends IPlayListSimple {
-  describe?: string;
   createTime: string;
-  commentCount: number;
+  commentedCount: number;
   songs: ISong[];
 }
-export type { IPlayList };
+
+interface ICreatePlayList {
+  name: string;
+}
+
+interface IUpdatePlayList {
+  id: number;
+  name?: string;
+  describe?: string;
+  coverId?: number;
+}
+
+interface IDelete {
+  id: number;
+}
+interface IAddSongToPlayList {
+  songId: number;
+  playListId: number;
+}
+
+export type { IPlayList, ICreatePlayList, IUpdatePlayList, IDelete,IAddSongToPlayList };

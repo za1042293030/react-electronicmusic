@@ -4,7 +4,14 @@ const {
 
 module.exports = function (app) {
   app.use(createProxyMiddleware('/api', {
-    target: 'http://localhost:3001',
-    changeOrigin: true
-  }));
+      target: 'http://localhost:3001',
+      changeOrigin: true
+    }),
+    createProxyMiddleware('/fstatic', {
+      target: 'http://localhost:3001',
+      changeOrigin: true,
+      pathRewrite: {
+        '^/fstatic': ''
+      }
+    }));
 };

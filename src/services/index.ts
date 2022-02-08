@@ -4,6 +4,7 @@ import {
   getLatestDynamics,
   getSongsByNameOrProducer,
   getDynamicById,
+  deleteDynamic,
 } from './dynamic';
 import {
   login,
@@ -13,6 +14,7 @@ import {
   checkUserNameUnique,
   checkNickNameUnique,
   loginAdmin,
+  changePassword,
 } from './sign';
 import {
   getSongsByStyleId,
@@ -25,7 +27,14 @@ import { searchSongs, searchAlbums, searchUsers, searchArtists, searchPlayLists 
 import { sendComment, getCommentsById, getSubCommentsById } from './comments';
 import { getRecommendAlbums, getAlbumById } from './album';
 import { getSongById } from './song';
-import { getPlayListsById } from './playlist';
+import {
+  getPlayListsById,
+  createPlayList,
+  updatePlayList,
+  deletePlayList,
+  addSongToPlayList,
+  deletePlayListSong
+} from './playlist';
 import { getDynamicByUserId, getPlayListsByUserId } from './user';
 const api = {
   loginAdmin,
@@ -59,5 +68,12 @@ const api = {
   searchPlayLists,
   getDynamicByUserId,
   getPlayListsByUserId,
+  changePassword,
+  createPlayList,
+  updatePlayList,
+  deletePlayList,
+  deleteDynamic,
+  addSongToPlayList,
+  deletePlayListSong
 };
 export default api;

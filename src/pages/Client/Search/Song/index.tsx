@@ -1,11 +1,11 @@
 import { XS_CWIDTH } from '@/common/constants';
 import { IUserSimple, ISearchSong, IStyle } from '@/common/typings';
 import { For, If } from '@/components';
-import { usePlayList } from '@/hooks';
+import { useHistoryScroll, usePlayList } from '@/hooks';
 import { PlayCircleOutlined } from '@ant-design/icons';
 import { Table, Tag } from 'antd';
 import React, { FC, ReactElement, useContext, useEffect } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { SearchContext } from '..';
 const { Column } = Table;
 
@@ -14,7 +14,7 @@ const Song: FC = (): ReactElement => {
   const { data, total, loading, onChange, getKey } = useContext(SearchContext);
   const { addPlayList } = usePlayList();
   const cWidth = document.documentElement.clientWidth;
-  const history = useHistory();
+  const { push } = useHistoryScroll();
 
   const onPlay = (value: ISearchSong) => {
     addPlayList(value);
@@ -26,6 +26,7 @@ const Song: FC = (): ReactElement => {
 
   return (
     <Table
+      rowKey="id"
       dataSource={data as ISearchSong[]}
       pagination={{ pageSize: 20, position: ['bottomCenter'], total, showSizeChanger: false }}
       size={cWidth > XS_CWIDTH ? 'middle' : 'small'}
@@ -51,7 +52,7 @@ const Song: FC = (): ReactElement => {
           <span
             className="pointer"
             onClick={() => {
-              history.push('/client/song/' + song.id);
+              push('/client/song/' + song.id);
             }}
           >
             {name}
@@ -70,7 +71,7 @@ const Song: FC = (): ReactElement => {
               <span
                 className="pointer"
                 onClick={() => {
-                  history.push('/client/album/' + album.id);
+                  push('/client/album/' + album.id);
                 }}
               >
                 {album.name}
@@ -97,19 +98,20 @@ const Song: FC = (): ReactElement => {
         key="artists"
         colSpan={cWidth > XS_CWIDTH ? 1 : 2}
         render={(artists: IUserSimple[]) => (
-          <>
-            {artists.map((artist, index) => (
+          <For data={artists}>
+            {(artist: IUserSimple, index) => (
               <span
+                key={artist.id}
                 className="pointer"
                 onClick={() => {
-                  history.push('/client/personalcenter/' + artist.id);
+                  push('/client/personalcenter/' + artist.id);
                 }}
               >
                 {artist.nickName}
                 {index === artists.length - 1 ? null : ','}
               </span>
-            ))}
-          </>
+            )}
+          </For>
         )}
       />
     </Table>

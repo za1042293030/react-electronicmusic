@@ -9,6 +9,9 @@ interface IState {
 interface IProps {
   type: CommentType;
   id?: number;
+  replyLoading?: boolean;
+  subReplyLoading?: boolean;
+  onSendSubReplyComment?: (value: string, commentId: number) => void;
   onSendReplyComment?: (value: string, commentId: number) => void;
 }
 export type { IState, IProps };

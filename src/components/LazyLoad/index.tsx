@@ -1,4 +1,4 @@
-import React, { VFC, memo, ReactElement, useEffect, useMemo, useRef, useState } from 'react';
+import React, { VFC, memo, ReactElement, useEffect, useRef, useState } from 'react';
 import { IProps } from './props';
 import './index.less';
 import { throttle } from 'lodash';
@@ -35,16 +35,21 @@ const LazyLoad: VFC<IProps> = ({ offset, children, width, height, loading }): Re
     return clearEvents;
   }, []);
 
-  const lazyLoadContainer = useMemo(
-    () => (
-      <div style={{ width: width + 'rem', height: height + 'rem' }} className="lazy-load" ref={ref}>
-        {loading}
-      </div>
-    ),
-    [loading, width, height]
+  return (
+    <If
+      flag={renderState}
+      element1={children}
+      element2={
+        <div
+          style={{ width: width + 'rem', height: height + 'rem' }}
+          className="lazy-load"
+          ref={ref}
+        >
+          {loading}
+        </div>
+      }
+    />
   );
-
-  return <If flag={renderState} element1={children} element2={lazyLoadContainer} />;
 };
 LazyLoad.defaultProps = {
   offset: 50,

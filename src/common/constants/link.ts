@@ -1,5 +1,4 @@
 import {
-  HomeOutlined,
   TagOutlined,
   AlignLeftOutlined,
   PlayCircleOutlined,
@@ -7,11 +6,6 @@ import {
 import { ILink } from '../typings';
 
 const linkList: ILink[] = [
-  {
-    path: '/client/home',
-    name: '首页',
-    icon: HomeOutlined,
-  },
   {
     path: '/client/style',
     name: '风格',

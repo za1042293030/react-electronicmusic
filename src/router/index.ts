@@ -8,20 +8,6 @@ const routerConfig: IRouter[] = [
     component: lazy(() => import('@/pages/Client')),
     children: [
       {
-        path: '/client/home',
-        component: lazy(() => import('@/pages/Client/Home')),
-        meta: {
-          title: '首页',
-        },
-      },
-      {
-        path: '/client/rank',
-        component: lazy(() => import('@/pages/Client/Rank')),
-        meta: {
-          title: '排行榜',
-        },
-      },
-      {
         path: '/client/albums',
         component: lazy(() => import('@/pages/Client/Albums')),
         meta: {
@@ -198,7 +184,7 @@ const routerConfig: IRouter[] = [
   },
   {
     path: '/',
-    redirect: '/client/home',
+    redirect: '/client/style',
   },
 ];
 export default routerConfig;

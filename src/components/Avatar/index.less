@@ -11,10 +11,21 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    position: relative;
 
     img {
       width: inherit;
       height: inherit;
+    }
+
+    .icon {
+      display: none !important;
+    }
+
+    &:hover {
+      .icon {
+        display: flex !important;
+      }
     }
 
   }

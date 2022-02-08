@@ -1,4 +1,4 @@
-import { IDynamic, ISongSimple, SendDynamicInfo } from '@/common/typings';
+import { IDelete, IDynamic, ISongSimple, SendDynamicInfo } from '@/common/typings';
 import { ajax } from './ajax';
 
 async function getRecommendDynamics(
@@ -48,10 +48,21 @@ async function getDynamicById(id: number): Promise<IDynamic | null | undefined> 
     })
   )?.data.data;
 }
+
+async function deleteDynamic(data: IDelete): Promise<boolean | null | undefined> {
+  return (
+    await ajax<boolean>({
+      url: '/api/dynamic/deleteDynamic',
+      method: 'POST',
+      data,
+    })
+  )?.data.data;
+}
 export {
   getRecommendDynamics,
   sendDynamic,
   getLatestDynamics,
   getSongsByNameOrProducer,
   getDynamicById,
+  deleteDynamic
 };
