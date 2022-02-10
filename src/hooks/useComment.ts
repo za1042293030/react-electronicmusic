@@ -36,9 +36,25 @@ function useComment(type: CommentType, id?: number) {
       message.error('发布失败');
     }
   };
+
+  const deleteComment = async (id: number) => {
+    if (!id) return;
+    message.loading('删除中，请稍候');
+    const flag = await api.deleteComment({
+      id,
+    });
+    message.destroy();
+    if (flag) {
+      message.success('删除成功');
+    } else {
+      message.error('删除失败');
+    }
+  };
   return {
     sendComment,
     sendReplyComment,
+    deleteComment
   };
 }
+
 export { useComment };

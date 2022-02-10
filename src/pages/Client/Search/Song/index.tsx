@@ -74,7 +74,7 @@ const Song: FC = (): ReactElement => {
                   push('/client/album/' + album.id);
                 }}
               >
-                {album.name}
+                {album?.name}
               </span>
             }
           />
@@ -88,7 +88,7 @@ const Song: FC = (): ReactElement => {
         render={(styles: IStyle[]) => (
           <If
             flag={cWidth > XS_CWIDTH}
-            element1={<For data={styles}>{style => <Tag key={style.id}>{style.name}</Tag>}</For>}
+            element1={<For data={styles} emptyEl={false}>{style => <Tag key={style.id}>{style.name}</Tag>}</For>}
           />
         )}
       />
@@ -98,7 +98,7 @@ const Song: FC = (): ReactElement => {
         key="artists"
         colSpan={cWidth > XS_CWIDTH ? 1 : 2}
         render={(artists: IUserSimple[]) => (
-          <For data={artists}>
+          <For data={artists} emptyEl={false}>
             {(artist: IUserSimple, index) => (
               <span
                 key={artist.id}

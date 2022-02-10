@@ -1,5 +1,5 @@
 import { CommentType } from '@/common/enums';
-import { IComment, IPage, SendCommentInfo } from '@/common/typings';
+import { IComment, IDelete, IPage, SendCommentInfo } from '@/common/typings';
 import { ajax } from './ajax';
 
 async function sendComment(data: SendCommentInfo): Promise<boolean | null | undefined> {
@@ -16,7 +16,7 @@ async function getCommentsById(
   type: CommentType,
   id: number,
   pageIndex: number,
-  pageSize: number
+  pageSize: number,
 ): Promise<IComment[] | null | undefined> {
   return (
     await ajax<IComment[]>({
@@ -28,7 +28,7 @@ async function getCommentsById(
 async function getSubCommentsById(
   id: number,
   pageIndex: number,
-  pageSize: number
+  pageSize: number,
 ): Promise<IPage<IComment> | null | undefined> {
   return (
     await ajax<IPage<IComment>>({
@@ -37,4 +37,16 @@ async function getSubCommentsById(
   )?.data.data;
 }
 
-export { sendComment, getCommentsById, getSubCommentsById };
+async function deleteComment(
+  data: IDelete,
+): Promise<boolean | null | undefined> {
+  return (
+    await ajax<boolean>({
+      url: '/api/comment/deleteComment',
+      method: 'POST',
+      data,
+    })
+  )?.data.data;
+}
+
+export { sendComment, getCommentsById, getSubCommentsById, deleteComment };

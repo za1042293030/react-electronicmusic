@@ -20,6 +20,7 @@ interface ISongSimple {
     nickName: string;
   }[];
 }
+
 interface IPlayListSimple {
   id: number;
   name: string;
@@ -27,7 +28,8 @@ interface IPlayListSimple {
   styles: IStyle[];
   cover: string | null;
   describe: string;
-  playListPopVisible:boolean;
+  playListPopVisible: boolean;
+  isEditPlayListModalVisible: boolean;
 }
 
 export type { ISongSimple, IStyle, IUserSimple, IPlayListSimple };

@@ -17,4 +17,12 @@ async function getAlbumById(id: number): Promise<IAlbum | null | undefined> {
   )?.data.data;
 }
 
-export { getRecommendAlbums, getAlbumById };
+async function getAlbumByUserId(id: number, pageIndex: number, pageSize: number): Promise<ISearchAlbum[] | null | undefined> {
+  return (
+    await ajax<ISearchAlbum[]>({
+      url: `/api/album/getAlbumByUserId?id=${id}&pageIndex=${pageIndex}&pageSize=${pageSize}`,
+    })
+  )?.data.data;
+}
+
+export { getRecommendAlbums, getAlbumById, getAlbumByUserId };

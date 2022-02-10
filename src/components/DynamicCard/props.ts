@@ -12,5 +12,7 @@ interface IProps {
   onSendReplyComment?: (value: string, commentId: number) => void;
   onSendSubReplyComment?: (value: string, commentId: number) => void;
   onDelete?: (id: number) => void | Promise<void>;
+  onDeleteComment?: (id: number) => void | Promise<void>;
 }
+
 export type { IProps };

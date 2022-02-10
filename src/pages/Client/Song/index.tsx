@@ -156,7 +156,7 @@ const Song: FC<IRouterProps<IParams>> = ({
                     <div className="song-card-right-bottom">
                       <p className="song-card-right-bottom-artist">
                         制作人：
-                        <For data={song?.artists ?? []}>
+                        <For data={song?.artists ?? []} emptyEl={false}>
                           {artist => (
                             <Tag color="green" key={artist.id}>
                               <Link to={'/client/personalcenter/' + artist.id}>

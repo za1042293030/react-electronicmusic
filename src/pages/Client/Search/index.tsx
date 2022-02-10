@@ -133,7 +133,7 @@ const Search: FC<IRouterProps> = ({ route, location: { search } }): ReactElement
       total: 0,
     }));
     push('/client/search/' + searchType + (key ? '?key=' + key : ''));
-  }, [searchType]);
+  }, [searchType,key]);
 
   useEffect(() => {
     loadData();

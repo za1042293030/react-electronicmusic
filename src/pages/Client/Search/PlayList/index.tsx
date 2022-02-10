@@ -6,6 +6,8 @@ import { Table, Tag } from 'antd';
 import React, { FC, ReactElement, useContext, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { SearchContext } from '..';
+import defaultImg from '@/assets/emptyImg.webp';
+
 const { Column } = Table;
 
 const PlayList: FC = (): ReactElement => {
@@ -25,7 +27,7 @@ const PlayList: FC = (): ReactElement => {
 
   return (
     <Table
-      rowKey="id"
+      rowKey='id'
       dataSource={data as ISearchPlayList[]}
       pagination={{ pageSize: 20, position: ['bottomCenter'], total, showSizeChanger: false }}
       size={cWidth > XS_CWIDTH ? 'middle' : 'small'}
@@ -33,46 +35,48 @@ const PlayList: FC = (): ReactElement => {
       onChange={({ current }) => onChange && onChange(current!)}
     >
       <Column
-        dataIndex="cover"
-        key="cover"
+        dataIndex='cover'
+        key='cover'
         width={100}
         render={(cover: string, { id }: ISearchPlayList) => (
           <LazyLoad loading={<Loading width={8} height={8} />}>
-            <img src={cover} title={cover} className="album-pic" onClick={() => goToPlayList(id)} />
+            <img src={cover ?? defaultImg} title={cover} className='album-pic'
+                 onClick={() => goToPlayList(id)} />
           </LazyLoad>
         )}
       />
       <Column
-        title="名字"
-        dataIndex="name"
-        key="name"
+        title='名字'
+        dataIndex='name'
+        key='name'
         render={(name, { id }: ISearchPlayList) => (
-          <span className="pointer" onClick={() => goToPlayList(id)}>
+          <span className='pointer' onClick={() => goToPlayList(id)}>
             {name}
           </span>
         )}
       />
       <Column
-        title="风格"
-        dataIndex="styles"
-        key="styles"
+        title='风格'
+        dataIndex='styles'
+        key='styles'
         colSpan={cWidth > XS_CWIDTH ? 1 : 0}
         render={(styles: IStyle[]) => (
           <If
             flag={cWidth > XS_CWIDTH}
-            element1={<For data={styles}>{style => <Tag key={style.id}>{style.name}</Tag>}</For>}
+            element1={<For data={styles} emptyEl={false}>{style => <Tag
+              key={style.id}>{style.name}</Tag>}</For>}
           />
         )}
       />
       <Column
-        title="创建者"
-        dataIndex="createBy"
-        key="createBy"
+        title='创建者'
+        dataIndex='createBy'
+        key='createBy'
         colSpan={cWidth > XS_CWIDTH ? 1 : 2}
         render={(createBy: IUserSimple) => (
           <>
             <span
-              className="pointer"
+              className='pointer'
               onClick={() => {
                 push('/client/personalcenter/' + createBy.id);
               }}

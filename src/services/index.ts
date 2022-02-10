@@ -24,8 +24,8 @@ import {
   getPlayListsByStyleId,
 } from './style';
 import { searchSongs, searchAlbums, searchUsers, searchArtists, searchPlayLists } from './search';
-import { sendComment, getCommentsById, getSubCommentsById } from './comments';
-import { getRecommendAlbums, getAlbumById } from './album';
+import { sendComment, getCommentsById, getSubCommentsById, deleteComment } from './comments';
+import { getRecommendAlbums, getAlbumById, getAlbumByUserId } from './album';
 import { getSongById } from './song';
 import {
   getPlayListsById,
@@ -74,6 +74,8 @@ const api = {
   deletePlayList,
   deleteDynamic,
   addSongToPlayList,
-  deletePlayListSong
+  deletePlayListSong,
+  getAlbumByUserId,
+  deleteComment
 };
 export default api;

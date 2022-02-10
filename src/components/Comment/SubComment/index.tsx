@@ -1,18 +1,21 @@
 import { IComment } from '@/common/typings';
-import { Avatar, If, Loading } from '@/components';
+import { Avatar, If } from '@/components';
 import api from '@/services';
-import { List, Comment } from 'antd';
+import { List, Comment, Skeleton, Popconfirm } from 'antd';
 import moment from 'moment';
 import React, { FC, memo, ReactElement, useEffect, useState } from 'react';
 import ReplyForm from '../ReplyForm';
 import { IProps, IState } from './interface';
+import './index.less';
+import { useUserInfo } from '@/hooks';
 
 const SubComment: FC<IProps> = ({
-  id,
-  goToPersonalCenter,
-  subReplyLoading,
-  onSendSubReplyComment,
-}): ReactElement => {
+                                  id,
+                                  goToPersonalCenter,
+                                  subReplyLoading,
+                                  onSendSubReplyComment,
+                                  onDeleteComment,
+                                }): ReactElement => {
   const [{ pageIndex, comments, total, loading }, setState] = useState<IState>({
     pageIndex: 1,
     comments: [],
@@ -20,12 +23,14 @@ const SubComment: FC<IProps> = ({
     loading: true,
   });
 
-  const loadData = async () => {
+  const { id: userId } = useUserInfo();
+
+  const loadData = async (pageIn?: number) => {
     setState(state => ({
       ...state,
       loading: true,
     }));
-    const res = await api.getSubCommentsById(id, pageIndex, 5);
+    const res = await api.getSubCommentsById(id, pageIn ?? pageIndex, 5);
     if (res)
       setState(state => ({
         ...state,
@@ -59,7 +64,7 @@ const SubComment: FC<IProps> = ({
   return (
     <If
       flag={loading}
-      element1={<Loading />}
+      element1={<Skeleton avatar active />}
       element2={
         <List
           pagination={{
@@ -70,32 +75,54 @@ const SubComment: FC<IProps> = ({
             pageSize: 5,
             position: 'bottom',
           }}
-          itemLayout="horizontal"
+          itemLayout='horizontal'
           dataSource={comments}
-          size="small"
+          size='small'
           renderItem={reply => (
             <li key={reply.id}>
               <Comment
+                className='sub-comment'
                 actions={[
-                  <span key="comment-basic-reply-to" onClick={() => openReplyForm(reply.id)}>
+                  <span key='comment-basic-reply-to' onClick={() => openReplyForm(reply.id)}>
                     回复Ta
                   </span>,
+                  <If flag={userId === reply.createBy.id}
+                      element1={
+                        <Popconfirm
+                          title='确定删除吗？'
+                          okText='确定'
+                          cancelText='取消'
+                          onConfirm={async () => {
+                            if (onDeleteComment) {
+                              await onDeleteComment(reply.id);
+                              setState(state => ({
+                                ...state,
+                                pageIndex: 1,
+                                comments: [],
+                              }));
+                              loadData(1);
+                            }
+                          }}
+                        >
+                          <span>删除</span>
+                        </Popconfirm>
+                      } />,
                 ]}
                 avatar={
                   <Avatar
                     imgSrc={reply.createBy?.avatar}
-                    size={2.6}
+                    size={2.4}
                     onClick={() => goToPersonalCenter && goToPersonalCenter(reply.createBy?.id)}
                   />
                 }
                 author={reply.createBy?.nickName}
                 content={
-                  <p className="reply-content">
+                  <p className='reply-content'>
                     {reply.replyTo ? (
                       <>
                         回复
                         <a
-                          className="reply-name"
+                          className='reply-name'
                           onClick={() =>
                             goToPersonalCenter && goToPersonalCenter(reply.replyTo?.id)
                           }
@@ -115,11 +142,12 @@ const SubComment: FC<IProps> = ({
                 flag={reply.openReplyForm}
                 element1={
                   <ReplyForm
+                    placeholder={'回复@' + reply?.createBy.nickName + '：'}
                     onSendComment={value =>
                       onSendSubReplyComment && onSendSubReplyComment(value, reply.id)
                     }
                     submitLoading={subReplyLoading}
-                    btnText="回复"
+                    btnText='回复'
                   />
                 }
               />

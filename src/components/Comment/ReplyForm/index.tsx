@@ -5,15 +5,21 @@ import './index.less';
 
 const { TextArea } = Input;
 
-const ReplyForm: FC<IProps> = ({ onSendComment, btnText, submitLoading }): ReactElement => {
+const ReplyForm: FC<IProps> = ({
+                                 onSendComment,
+                                 btnText,
+                                 placeholder,
+                                 submitLoading,
+                               }): ReactElement => {
   const [{ commentValue }, setState] = useState<IState>({
     commentValue: '',
   });
   return (
-    <div className="add-comment-form">
+    <div className='add-comment-form'>
       <TextArea
+        placeholder={placeholder}
         rows={2}
-        className="comment-textarea"
+        className='comment-textarea'
         value={commentValue}
         onChange={e =>
           setState(state => ({
@@ -22,10 +28,10 @@ const ReplyForm: FC<IProps> = ({ onSendComment, btnText, submitLoading }): React
           }))
         }
       />
-      <div className="send-comment">
+      <div className='send-comment'>
         <Button
-          htmlType="submit"
-          type="primary"
+          htmlType='submit'
+          type='primary'
           loading={submitLoading}
           onClick={() => {
             if (onSendComment) {

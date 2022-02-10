@@ -24,26 +24,27 @@ interface IState {
 }
 
 const DynamicCard: FC<IProps & IDynamicWithComment> = ({
-  id,
-  createTime,
-  content,
-  createBy,
-  commentedCount,
-  song,
-  pictures,
-  submitLoading,
-  replyLoading,
-  openComment,
-  subReplyLoading,
-  isPublish,
-  deleteLoading,
-  onComment,
-  onClickSong,
-  onSendComment,
-  onSendReplyComment,
-  onSendSubReplyComment,
-  onDelete,
-}): ReactElement => {
+                                                         id,
+                                                         createTime,
+                                                         content,
+                                                         createBy,
+                                                         commentedCount,
+                                                         song,
+                                                         pictures,
+                                                         submitLoading,
+                                                         replyLoading,
+                                                         openComment,
+                                                         subReplyLoading,
+                                                         isPublish,
+                                                         deleteLoading,
+                                                         onComment,
+                                                         onClickSong,
+                                                         onSendComment,
+                                                         onSendReplyComment,
+                                                         onSendSubReplyComment,
+                                                         onDelete,
+                                                         onDeleteComment,
+                                                       }): ReactElement => {
   const [{ visible, current, popVisible }, setState] = useState<IState>({
     visible: false,
     current: 0,
@@ -54,7 +55,7 @@ const DynamicCard: FC<IProps & IDynamicWithComment> = ({
   const pictureContainerChildren = useCallback(
     (picture: IDynamicPic, index: number) => (
       <div
-        className="picture-container"
+        className='picture-container'
         onClick={() =>
           setState(state => ({
             ...state,
@@ -74,12 +75,12 @@ const DynamicCard: FC<IProps & IDynamicWithComment> = ({
             }}
           />
         </LazyLoad>
-        <div className="perview">
+        <div className='perview'>
           <EyeOutlined style={{ color: 'white', fontSize: '2rem', fontWeight: 'bolder' }} />
         </div>
       </div>
     ),
-    [pictures]
+    [pictures],
   );
 
   const imagePreview = useMemo(
@@ -106,11 +107,11 @@ const DynamicCard: FC<IProps & IDynamicWithComment> = ({
         </div>
       </LazyLoad>
     ),
-    [pictures, visible, current]
+    [pictures, visible, current],
   );
   const dynamicMusicCard = useMemo(() => {
     return (
-      <div className="music-card">
+      <div className='music-card'>
         <MusicCard
           height={5}
           row
@@ -120,7 +121,7 @@ const DynamicCard: FC<IProps & IDynamicWithComment> = ({
           fileSrc={song?.file}
         >
           <div
-            className="card-child"
+            className='card-child'
             onClick={() => {
               push('/client/song/' + song?.id);
             }}
@@ -134,9 +135,9 @@ const DynamicCard: FC<IProps & IDynamicWithComment> = ({
     );
   }, [song, onClickSong]);
   return (
-    <div className="dynamic-card">
-      <div className="head">
-        <div className="dynamic-card-left">
+    <div className='dynamic-card'>
+      <div className='head'>
+        <div className='dynamic-card-left'>
           <Avatar
             size={4}
             title={createBy?.nickName}
@@ -146,14 +147,14 @@ const DynamicCard: FC<IProps & IDynamicWithComment> = ({
             }}
           ></Avatar>
         </div>
-        <div className="dynamic-actions">
+        <div className='dynamic-actions'>
           <span>{moment(createTime).utcOffset(8).fromNow()} </span>
           <If
             flag={deleteLoading !== undefined && userInfo?.id === createBy?.id}
             element1={
               <>
                 <Popconfirm
-                  title="确定要删除吗？"
+                  title='确定要删除吗？'
                   onConfirm={async () => {
                     onDelete && (await onDelete(id));
                     setState(state => ({
@@ -167,13 +168,13 @@ const DynamicCard: FC<IProps & IDynamicWithComment> = ({
                       popVisible: false,
                     }))
                   }
-                  okText="确认"
-                  cancelText="取消"
+                  okText='确认'
+                  cancelText='取消'
                   okButtonProps={{ loading: deleteLoading }}
                   visible={popVisible}
                 >
                   <a
-                    className="dynamic-delete"
+                    className='dynamic-delete'
                     onClick={() =>
                       setState(state => ({
                         ...state,
@@ -191,7 +192,7 @@ const DynamicCard: FC<IProps & IDynamicWithComment> = ({
         <If
           flag={isPublish || isPublish === undefined}
           element2={
-            <span className="private" title="仅自己可见">
+            <span className='private' title='仅自己可见'>
               私密
               <EyeInvisibleOutlined style={{ padding: '0 .2rem' }} />
             </span>
@@ -199,34 +200,34 @@ const DynamicCard: FC<IProps & IDynamicWithComment> = ({
         />
       </div>
       <div
-        className="dynamic-card-content"
+        className='dynamic-card-content'
         style={
           document.documentElement.clientWidth < XS_CWIDTH
             ? { display: 'flex', flexDirection: 'column', alignItems: 'center' }
             : undefined
         }
       >
-        <div className="dynamic-card-text">
-          <span className="text">{content}</span>
+        <div className='dynamic-card-text'>
+          <span className='text'>{content}</span>
         </div>
         <If flag={isEmpty(song)} element2={dynamicMusicCard} />
         <If
           flag={isEmpty(pictures)}
           element2={
-            <div className="picture-group">
+            <div className='picture-group'>
               <For data={pictures!}>{pictureContainerChildren}</For>
             </div>
           }
         />
       </div>
-      <div className="dynamic-card-bottom">
-        <div className="dynamic-card-icon">
+      <div className='dynamic-card-bottom'>
+        <div className='dynamic-card-icon'>
           <div>
             <MessageOutlined
               style={{ fontSize: '1.6rem', cursor: 'pointer' }}
               onClick={() => onComment && onComment(id)}
             />
-            <span className="dynamic-icon-text">{commentedCount}</span>
+            <span className='dynamic-icon-text'>{commentedCount}</span>
           </div>
         </div>
       </div>
@@ -234,7 +235,8 @@ const DynamicCard: FC<IProps & IDynamicWithComment> = ({
         flag={openComment}
         element1={
           <>
-            <ReplyForm onSendComment={onSendComment} submitLoading={submitLoading} />
+            <ReplyForm onSendComment={onSendComment} submitLoading={submitLoading}
+                       placeholder={'评论一下@' + createBy.nickName + '怎么样'} />
             <Comment
               type={CommentType.DYNAMIC}
               id={id}
@@ -242,6 +244,7 @@ const DynamicCard: FC<IProps & IDynamicWithComment> = ({
               onSendSubReplyComment={onSendSubReplyComment}
               replyLoading={replyLoading}
               subReplyLoading={subReplyLoading}
+              onDeleteComment={onDeleteComment}
             />
           </>
         }

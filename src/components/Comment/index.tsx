@@ -1,5 +1,5 @@
 import api from '@/services';
-import { List, Skeleton, Comment as _Comment } from 'antd';
+import { List, Skeleton, Comment as _Comment, Popconfirm } from 'antd';
 import { isEmpty } from 'lodash';
 import moment from 'moment';
 import React, { FC, memo, ReactElement, useCallback, useEffect, useState } from 'react';
@@ -9,45 +9,39 @@ import { IProps, IState } from './interface';
 import './index.less';
 import SubComment from './SubComment';
 import ReplyForm from './ReplyForm';
-import { useHistoryScroll } from '@/hooks';
+import { useHistoryScroll, useUserInfo } from '@/hooks';
 
 const Comment: FC<IProps> = ({
-  type,
-  id,
-  replyLoading,
-  subReplyLoading,
-  onSendReplyComment,
-  onSendSubReplyComment,
-}): ReactElement => {
+                               type,
+                               id,
+                               replyLoading,
+                               subReplyLoading,
+                               onSendReplyComment,
+                               onSendSubReplyComment,
+                               onDeleteComment,
+                             }): ReactElement => {
   const { push } = useHistoryScroll();
   const [{ hasMore, comments, pageIndex }, setState] = useState<IState>({
     hasMore: true,
     comments: [],
     pageIndex: 1,
   });
+  const { id: userId } = useUserInfo();
 
   const goToPersonalCenter = useCallback((id?: number) => {
     if (!id) return;
     push('/client/personalcenter/' + id);
   }, []);
 
-  useEffect(() => {
-    if (pageIndex === 2 && comments.length < 10)
-      setState(state => ({
-        ...state,
-        hasMore: false,
-      }));
-  }, [comments, pageIndex]);
-
-  const loadData = useCallback(async () => {
+  const loadData = useCallback(async (pageIn?: number) => {
     if (!id) return;
-    const newComments = await api.getCommentsById(type, id, pageIndex, 10);
+    const newComments = await api.getCommentsById(type, id, pageIn ?? pageIndex, 10);
     const empty = isEmpty(newComments);
     setState(state => ({
       ...state,
-      hasMore: empty ? false : true,
+      hasMore: empty || (newComments && newComments.length < 10) ? false : true,
       comments: [
-        ...comments,
+        ...state.comments,
         ...(newComments?.map(newComment => ({
           ...newComment,
           open: false,
@@ -88,33 +82,57 @@ const Comment: FC<IProps> = ({
 
   return (
     <InfiniteScroll
-      className="comment-scroll"
+      className='comment-scroll'
       dataLength={comments!.length}
       next={loadData}
       hasMore={hasMore}
       loader={<Skeleton avatar active />}
-      endMessage={<Empty text="暂无更多评论..." />}
+      endMessage={<Empty text='暂无更多评论...' />}
     >
       <If
         flag={comments!.length === 0}
         element2={
           <List
-            className="comment"
-            itemLayout="horizontal"
+            className='comment'
+            itemLayout='horizontal'
             dataSource={comments}
-            size="small"
+            size='small'
             renderItem={comment => (
               <li key={comment.id}>
                 <_Comment
-                  className="comment-item"
+                  className='comment-item'
                   actions={[
-                    <span key="comment-basic-reply-to" onClick={() => openReplyForm(comment.id)}>
+                    <span key='comment-basic-reply-to' onClick={() => openReplyForm(comment.id)}>
                       回复Ta
                     </span>,
+                    <If flag={userId === comment.createBy.id}
+                        element1={
+                          <Popconfirm
+                            title='确定删除吗？'
+                            okText='确定'
+                            cancelText='取消'
+                            onConfirm={async () => {
+                              if (onDeleteComment) {
+                                await onDeleteComment(comment.id);
+                                window.scrollTo(0, 0);
+                                setState(state => ({
+                                  ...state,
+                                  pageIndex: 1,
+                                  comments: [],
+                                  hasMore: true,
+                                }));
+                                loadData(1);
+                              }
+                            }
+                            }
+                          >
+                            <span>删除</span>
+                          </Popconfirm>
+                        } />,
                     <If
                       flag={comment.replyCount > 0 && !comment.open}
                       element1={
-                        <a className="open-reply" onClick={() => openReply(comment.id)}>
+                        <a className='open-reply' onClick={() => openReply(comment.id)}>
                           展开{comment.replyCount}条回复...
                         </a>
                       }
@@ -141,6 +159,7 @@ const Comment: FC<IProps> = ({
                         type={type}
                         onSendSubReplyComment={onSendSubReplyComment}
                         subReplyLoading={subReplyLoading}
+                        onDeleteComment={onDeleteComment}
                       />
                     }
                   />
@@ -152,8 +171,9 @@ const Comment: FC<IProps> = ({
                       onSendComment={value =>
                         onSendReplyComment && onSendReplyComment(value, comment.id)
                       }
+                      placeholder={'回复@' + comment?.createBy.nickName + '：'}
                       submitLoading={replyLoading}
-                      btnText="回复"
+                      btnText='回复'
                     />
                   }
                 />

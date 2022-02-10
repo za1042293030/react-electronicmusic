@@ -5,7 +5,7 @@ import {
   IDynamic,
   IParams,
   IPlayListSimple,
-  IRouterProps,
+  IRouterProps, ISearchAlbum,
   IStyle,
   IUpdatePlayList,
   IUserInfo,
@@ -14,7 +14,6 @@ import { Avatar, DynamicCard, Empty, For, If, Loading, MusicCard } from '@/compo
 import { useHistoryScroll, usePlayList, useSetTitle, useSign, useUserInfo } from '@/hooks';
 import api from '@/services';
 import {
-  Affix,
   Button,
   Divider,
   Skeleton,
@@ -51,6 +50,7 @@ interface IState {
   userInfo: IUserInfo | undefined;
   dynamics: IDynamic[];
   playlists: IPlayListSimple[];
+  albums: ISearchAlbum[];
   hasMore: boolean;
   id: number;
   pageSize: number;
@@ -60,7 +60,6 @@ interface IState {
   pageIndex: number;
   changePasswordLoading: boolean;
   isCreatePlayListModalVisible: boolean;
-  isEditPlayListModalVisible: boolean;
   playListLoading: boolean;
   editPlayList: IPlayListSimple | Record<string, any>;
   playListCoverId: number;
@@ -68,11 +67,11 @@ interface IState {
 }
 
 const PersonalCenter: FC<IRouterProps<IParams>> = ({
-  route,
-  match: {
-    params: { id: _id },
-  },
-}): ReactElement => {
+                                                     route,
+                                                     match: {
+                                                       params: { id: _id },
+                                                     },
+                                                   }): ReactElement => {
   const cWidth = document.documentElement.clientWidth;
   const { userInfo: _userInfo } = useUserInfo();
   const [
@@ -89,11 +88,11 @@ const PersonalCenter: FC<IRouterProps<IParams>> = ({
       pageIndex,
       changePasswordLoading,
       isCreatePlayListModalVisible,
-      isEditPlayListModalVisible,
       playListLoading,
       editPlayList,
       playListCoverId,
       dynamicLoading,
+      albums,
     },
     setState,
   ] = useState<IState>({
@@ -109,11 +108,11 @@ const PersonalCenter: FC<IRouterProps<IParams>> = ({
     pageIndex: 1,
     changePasswordLoading: false,
     isCreatePlayListModalVisible: false,
-    isEditPlayListModalVisible: false,
     playListLoading: false,
     editPlayList: {},
     playListCoverId: -1,
     dynamicLoading: false,
+    albums: [],
   });
   useSetTitle(userInfo?.nickName + '_' + route.meta?.title!, [userInfo]);
   const { addPlayList } = usePlayList();
@@ -133,20 +132,32 @@ const PersonalCenter: FC<IRouterProps<IParams>> = ({
       hasMore: true,
       dynamics: [],
       playlists: [],
+      albums: [],
       pageIndex: 1,
     }));
-    switch (tabKey) {
-      case TabKey.DYNAMIC: {
-        loadDynamicsData(1);
-        break;
+    const loadData = async () => {
+      switch (tabKey) {
+        case TabKey.DYNAMIC: {
+          await loadDynamicsData(1);
+          break;
+        }
+        case TabKey.PLAYLIST: {
+          await loadPlayListData(1);
+          break;
+        }
+        case TabKey.ALBUM: {
+          await loadAlbumsData(1);
+          break;
+        }
+        case TabKey.ARTIST: {
+          push('/client/producer/' + _id);
+          break;
+        }
+        default:
+          break;
       }
-      case TabKey.PLAYLIST: {
-        loadPlayListData(1);
-        break;
-      }
-      default:
-        break;
-    }
+    };
+    loadData();
   }, [tabKey]);
 
   const loadUserInfo = async () => {
@@ -198,7 +209,26 @@ const PersonalCenter: FC<IRouterProps<IParams>> = ({
         pageIndex: empty ? state.pageIndex : state.pageIndex + 1,
       }));
     },
-    [id, pageIndex, pageSize]
+    [id, pageIndex, pageSize],
+  );
+
+  const loadAlbumsData = useCallback(
+    async (pageIn?: number) => {
+      setState(state => ({
+        ...state,
+        loading: true,
+      }));
+      const newAlbums = await api.getAlbumByUserId(id, pageIn ?? pageIndex, pageSize);
+      const empty = isEmpty(newAlbums);
+      setState(state => ({
+        ...state,
+        hasMore: empty || (newAlbums && newAlbums?.length < pageSize) ? false : true,
+        albums: [...state.albums, ...(!empty ? (newAlbums as ISearchAlbum[]) : [])],
+        loading: false,
+        pageIndex: empty ? state.pageIndex : state.pageIndex + 1,
+      }));
+    },
+    [id, pageIndex, pageSize],
   );
 
   const onDynamicDelete = async (id: number) => {
@@ -214,6 +244,7 @@ const PersonalCenter: FC<IRouterProps<IParams>> = ({
       ...state,
       dynamicPopVisible: false,
       dynamicLoading: false,
+      dynamics: [],
     }));
     message.destroy();
     if (flag) {
@@ -243,16 +274,17 @@ const PersonalCenter: FC<IRouterProps<IParams>> = ({
           ...state.playlists,
           ...(!empty
             ? (newPlayLists?.map(newPlayList => ({
-                ...newPlayList,
-                playListPopVisible: false,
-              })) as IPlayListSimple[])
+              ...newPlayList,
+              playListPopVisible: false,
+              isEditPlayListModalVisible: false,
+            })) as IPlayListSimple[])
             : []),
         ],
         loading: false,
         pageIndex: empty ? state.pageIndex : state.pageIndex + 1,
       }));
     },
-    [id, pageIndex, pageSize]
+    [id, pageIndex, pageSize],
   );
 
   const onComment = useCallback((id: number) => {
@@ -334,6 +366,7 @@ const PersonalCenter: FC<IRouterProps<IParams>> = ({
       ...state,
       playListPopVisible: false,
       playListLoading: false,
+      playlists: [],
     }));
     message.destroy();
     if (flag) {
@@ -349,46 +382,44 @@ const PersonalCenter: FC<IRouterProps<IParams>> = ({
   };
 
   return (
-    <div className="personal-center">
-      <main className="main">
-        <div className="personal-center-container">
+    <div className='personal-center'>
+      <main className='main'>
+        <div className='personal-center-container'>
           <If
             flag={useInfoLoading}
             element1={<Loading />}
             element2={
-              <Affix offsetTop={document.documentElement.clientWidth > SM_CWIDTH ? 60 : 50}>
-                <div className="personal-info">
-                  <div className="personal-info-avatar">
-                    <Avatar
-                      imgSrc={userInfo?.avatar}
-                      size={5}
-                      editIcon={_userInfo?.id === parseInt(_id) ? true : false}
-                      onClick={() => _userInfo?.id === parseInt(_id) && onChange('message')}
-                    />
-                  </div>
-                  <p className="personal-name">{userInfo?.nickName}</p>
+              <div className='personal-info'>
+                <div className='personal-info-avatar'>
+                  <Avatar
+                    imgSrc={userInfo?.avatar}
+                    size={5}
+                    editIcon={_userInfo?.id === parseInt(_id) ? true : false}
+                    onClick={() => _userInfo?.id === parseInt(_id) && onChange('message')}
+                  />
                 </div>
-              </Affix>
+                <p className='personal-name'>{userInfo?.nickName}</p>
+              </div>
             }
           />
           <Tabs
-            defaultActiveKey="message"
+            defaultActiveKey='message'
             onChange={onChange}
             tabPosition={tabPosition}
-            className="personal-tabs"
+            className='personal-tabs'
             activeKey={tabKey}
           >
             {_userInfo?.id === id ? (
-              <TabPane tab="信息" key="message">
+              <TabPane tab='信息' key='message'>
                 <If
                   flag={tabKey === TabKey.MESSAGE}
                   element1={
                     <>
-                      <Divider plain orientation="left">
+                      <Divider plain orientation='left'>
                         头像
                       </Divider>
-                      <div className="upload-avatar">
-                        <Divider plain orientation="left">
+                      <div className='upload-avatar'>
+                        <Divider plain orientation='left'>
                           预览
                         </Divider>
                         <Image
@@ -396,13 +427,13 @@ const PersonalCenter: FC<IRouterProps<IParams>> = ({
                           src={_userInfo?.avatar ?? DefaultImg}
                           preview={_userInfo?.avatar !== null}
                         />
-                        <Divider plain orientation="left">
+                        <Divider plain orientation='left'>
                           上传
                         </Divider>
-                        <ImgCrop modalOk="确定" modalCancel="取消">
+                        <ImgCrop modalOk='确定' modalCancel='取消'>
                           <Upload
                             action={BASE_URL + '/api/file/uploadAvatar'}
-                            listType="picture"
+                            listType='picture'
                             maxCount={1}
                             style={{ width: '2rem' }}
                             headers={{
@@ -417,45 +448,45 @@ const PersonalCenter: FC<IRouterProps<IParams>> = ({
                                 message.success('上传成功，审核马上好');
                               }
                             }}
-                            name="avatar"
+                            name='avatar'
                           >
                             <Button icon={<UploadOutlined />}>上传/更改头像</Button>
                           </Upload>
                         </ImgCrop>
                       </div>
-                      <Divider plain orientation="left">
+                      <Divider plain orientation='left'>
                         修改密码
                       </Divider>
                       <Form
-                        name="basic"
+                        name='basic'
                         wrapperCol={{ lg: 12, xs: 24 }}
-                        autoComplete="off"
-                        className="password-form"
+                        autoComplete='off'
+                        className='password-form'
                         onFinish={onFinish}
                       >
-                        <Form.Item name="oldpassword" rules={passwordRule}>
-                          <Input placeholder="原密码" />
+                        <Form.Item name='oldpassword' rules={passwordRule}>
+                          <Input placeholder='原密码' />
                         </Form.Item>
-                        <Form.Item name="newpassword" rules={passwordRule}>
-                          <Input placeholder="新密码，请自己牢记哦" />
+                        <Form.Item name='newpassword' rules={passwordRule}>
+                          <Input placeholder='新密码，请自己牢记哦' />
                         </Form.Item>
                         <Form.Item wrapperCol={{ span: 12 }}>
-                          <Button type="primary" htmlType="submit" loading={changePasswordLoading}>
+                          <Button type='primary' htmlType='submit' loading={changePasswordLoading}>
                             修改密码
                           </Button>
                         </Form.Item>
                       </Form>
-                      <Divider plain orientation="left">
+                      <Divider plain orientation='left'>
                         登出
                       </Divider>
-                      <div className="msg-logout">
+                      <div className='msg-logout'>
                         <Popconfirm
-                          title="确定退出本账号吗？"
+                          title='确定退出本账号吗？'
                           onConfirm={() => logOut()}
-                          okText="确定"
-                          cancelText="取消"
+                          okText='确定'
+                          cancelText='取消'
                         >
-                          <Button type="primary" danger>
+                          <Button type='primary' danger>
                             退出账号
                           </Button>
                         </Popconfirm>
@@ -465,7 +496,7 @@ const PersonalCenter: FC<IRouterProps<IParams>> = ({
                 />
               </TabPane>
             ) : null}
-            <TabPane tab="动态" key="dynamic">
+            <TabPane tab='动态' key='dynamic'>
               <If
                 flag={tabKey === TabKey.DYNAMIC}
                 element1={
@@ -479,10 +510,11 @@ const PersonalCenter: FC<IRouterProps<IParams>> = ({
                       </div>
                     }
                     endMessage={
-                      <If flag={_userInfo?.id === id} element2={<Empty text="暂无更多..." />} />
+                      <If flag={_userInfo?.id === id || dynamics.length === 0}
+                          element2={<Empty text='暂无更多...' />} />
                     }
                   >
-                    <For data={dynamics} emptyEl={false}>
+                    <For data={dynamics}>
                       {(dynamic: IDynamic) => (
                         <DynamicCard
                           onComment={onComment}
@@ -498,7 +530,7 @@ const PersonalCenter: FC<IRouterProps<IParams>> = ({
                 }
               />
             </TabPane>
-            <TabPane tab="歌单" key="playlist">
+            <TabPane tab='歌单' key='playlist'>
               <If
                 flag={tabKey === TabKey.PLAYLIST}
                 element1={
@@ -508,7 +540,7 @@ const PersonalCenter: FC<IRouterProps<IParams>> = ({
                       element1={
                         <>
                           <div
-                            className="playlist-add"
+                            className='playlist-add'
                             onClick={() =>
                               setState(state => ({
                                 ...state,
@@ -519,11 +551,11 @@ const PersonalCenter: FC<IRouterProps<IParams>> = ({
                             <PlusOutlined />
                             <span>添加歌单</span>
                           </div>
-                          <Divider plain orientation="left">
+                          <Divider plain orientation='left'>
                             我的歌单
                           </Divider>
                           <Modal
-                            title="创建歌单"
+                            title='创建歌单'
                             visible={isCreatePlayListModalVisible}
                             onCancel={() =>
                               setState(state => ({
@@ -534,12 +566,12 @@ const PersonalCenter: FC<IRouterProps<IParams>> = ({
                             footer={null}
                             destroyOnClose
                           >
-                            <Form name="basic" onFinish={createPlaylist} autoComplete="off">
-                              <Form.Item name="name" rules={playListNameRule}>
-                                <Input placeholder="歌单名称" />
+                            <Form name='basic' onFinish={createPlaylist} autoComplete='off'>
+                              <Form.Item name='name' rules={playListNameRule}>
+                                <Input placeholder='歌单名称' />
                               </Form.Item>
                               <Form.Item wrapperCol={{ span: 24 }}>
-                                <Button type="primary" htmlType="submit" loading={playListLoading}>
+                                <Button type='primary' htmlType='submit' loading={playListLoading}>
                                   创建
                                 </Button>
                               </Form.Item>
@@ -554,12 +586,13 @@ const PersonalCenter: FC<IRouterProps<IParams>> = ({
                       hasMore={hasMore}
                       loader={<Skeleton active />}
                       endMessage={
-                        <If flag={_userInfo?.id === id} element2={<Empty text="暂无更多..." />} />
+                        <If flag={_userInfo?.id === id || playlists.length === 0}
+                            element2={<Empty text='暂无更多...' />} />
                       }
                     >
-                      <For data={playlists} emptyEl={false}>
+                      <For data={playlists}>
                         {(playList: IPlayListSimple) => (
-                          <div className="col-container" key={playList.id}>
+                          <div className='col-container' key={playList.id}>
                             <MusicCard
                               src={playList.cover ?? DefaultImg}
                               row
@@ -570,10 +603,10 @@ const PersonalCenter: FC<IRouterProps<IParams>> = ({
                               }}
                               imgWidth={12}
                             >
-                              <div className="playlist-card-bottom">
-                                <div className="playlist-card-info">
+                              <div className='playlist-card-bottom'>
+                                <div className='playlist-card-info'>
                                   <span
-                                    className="playlist-name"
+                                    className='playlist-name'
                                     onClick={() => {
                                       push('/client/playlist/' + playList.id);
                                     }}
@@ -584,12 +617,12 @@ const PersonalCenter: FC<IRouterProps<IParams>> = ({
                                     flag={_userInfo?.id === id}
                                     element1={
                                       <>
-                                        <div className="playlist-actions">
+                                        <div className='playlist-actions'>
                                           <Popconfirm
-                                            title="确定要删除吗？"
+                                            title='确定要删除吗？'
                                             onConfirm={() => onPlayListDelete(playList.id)}
-                                            okText="确认"
-                                            cancelText="取消"
+                                            okText='确认'
+                                            cancelText='取消'
                                             okButtonProps={{ loading: playListLoading }}
                                             visible={playList.playListPopVisible}
                                             onCancel={() =>
@@ -603,7 +636,7 @@ const PersonalCenter: FC<IRouterProps<IParams>> = ({
                                             }
                                           >
                                             <a
-                                              className="playlist-edit"
+                                              className='playlist-edit'
                                               onClick={() =>
                                                 setState(state => ({
                                                   ...state,
@@ -619,12 +652,16 @@ const PersonalCenter: FC<IRouterProps<IParams>> = ({
                                             </a>
                                           </Popconfirm>
                                           <a
-                                            className="playlist-edit"
+                                            className='playlist-edit'
                                             onClick={() => {
                                               setState(state => ({
                                                 ...state,
                                                 editPlayList: playList,
-                                                isEditPlayListModalVisible: true,
+                                                playlists: state.playlists.map(item => ({
+                                                  ...item,
+                                                  isEditPlayListModalVisible:
+                                                    item.id === playList.id ? true : false,
+                                                })),
                                               }));
                                             }}
                                           >
@@ -632,61 +669,63 @@ const PersonalCenter: FC<IRouterProps<IParams>> = ({
                                           </a>
                                         </div>
                                         <Modal
-                                          title="修改歌单信息"
-                                          visible={isEditPlayListModalVisible}
+                                          title='修改歌单信息'
+                                          visible={playList.isEditPlayListModalVisible}
                                           onCancel={() =>
                                             setState(state => ({
                                               ...state,
                                               editPlayList: {},
                                               playListCoverId: -1,
-                                              isEditPlayListModalVisible: false,
+                                              playlists: state.playlists.map(item => ({
+                                                ...item,
+                                                isEditPlayListModalVisible: false,
+                                              })),
                                             }))
                                           }
                                           footer={null}
                                           destroyOnClose
-                                          maskStyle={{ background: 'rgba(0,0,0,0.2)' }}
                                         >
                                           <Form
-                                            name="basic"
+                                            name='basic'
                                             onFinish={updatePlayList}
-                                            autoComplete="off"
+                                            autoComplete='off'
                                           >
                                             <Form.Item
-                                              name="name"
+                                              name='name'
                                               rules={playListNameRule}
-                                              label="歌单名称"
+                                              label='歌单名称'
                                             >
                                               <Input
-                                                placeholder="请填写歌单名称"
+                                                placeholder='请填写歌单名称'
                                                 defaultValue={editPlayList.name}
                                               />
                                             </Form.Item>
                                             <Form.Item
-                                              name="describe"
+                                              name='describe'
                                               rules={playListDescribeRule}
-                                              label="简介"
+                                              label='简介'
                                             >
                                               <Input.TextArea
-                                                placeholder="请填写简介"
+                                                placeholder='请填写简介'
                                                 rows={3}
                                                 defaultValue={editPlayList?.describe}
                                               />
                                             </Form.Item>
-                                            <div className="form-upload-cover">
-                                              <span className="form-upload-cover-label">
+                                            <div className='form-upload-cover'>
+                                              <span className='form-upload-cover-label'>
                                                 封面：
                                               </span>
-                                              <div className="upload-img">
+                                              <div className='upload-img'>
                                                 <Image
                                                   width={200}
                                                   src={editPlayList?.cover ?? DefaultImg}
                                                   preview={editPlayList?.cover !== null}
                                                 />
                                               </div>
-                                              <ImgCrop modalOk="确定" modalCancel="取消">
+                                              <ImgCrop modalOk='确定' modalCancel='取消'>
                                                 <Upload
                                                   action={BASE_URL + '/api/file/uploadImage'}
-                                                  listType="picture"
+                                                  listType='picture'
                                                   maxCount={1}
                                                   style={{ width: '2rem' }}
                                                   headers={{
@@ -706,7 +745,7 @@ const PersonalCenter: FC<IRouterProps<IParams>> = ({
                                                       message.success('上传成功');
                                                     }
                                                   }}
-                                                  name="img"
+                                                  name='img'
                                                 >
                                                   <Button icon={<UploadOutlined />}>
                                                     上传/更改封面
@@ -719,8 +758,8 @@ const PersonalCenter: FC<IRouterProps<IParams>> = ({
                                               style={{ marginBottom: 0 }}
                                             >
                                               <Button
-                                                type="primary"
-                                                htmlType="submit"
+                                                type='primary'
+                                                htmlType='submit'
                                                 loading={playListLoading}
                                               >
                                                 保存
@@ -732,10 +771,10 @@ const PersonalCenter: FC<IRouterProps<IParams>> = ({
                                     }
                                   />
                                 </div>
-                                <div className="playlist-tag-container">
+                                <div className='playlist-tag-container'>
                                   <For data={playList.styles} emptyEl={false}>
                                     {(style: IStyle) => (
-                                      <Tag key={style.id} className="playlist-tag">
+                                      <Tag key={style.id} className='playlist-tag'>
                                         {style.name}
                                       </Tag>
                                     )}
@@ -752,25 +791,62 @@ const PersonalCenter: FC<IRouterProps<IParams>> = ({
               />
             </TabPane>
             {userInfo?.role?.id === 2 ? (
-              <TabPane tab="专辑" key="album">
-                <If flag={tabKey === TabKey.ALBUM} element1={<div>album</div>} />
+              <TabPane tab='专辑' key='album'>
+                <If flag={tabKey === TabKey.ALBUM} element1={
+                  <InfiniteScroll
+                    dataLength={albums.length}
+                    next={loadAlbumsData}
+                    hasMore={hasMore}
+                    loader={<Skeleton active />}
+                    endMessage={
+                      <If flag={_userInfo?.id === id || albums.length === 0}
+                          element2={<Empty text='暂无更多...' />} />
+                    }
+                  >
+                    <For data={albums}>
+                      {(album: ISearchAlbum) => (
+                        <div className='col-container' key={album.id}>
+                          <MusicCard
+                            src={album.cover ?? DefaultImg}
+                            row
+                            height={12}
+                            playBtn={false}
+                            onClick={() => {
+                              push('/client/album/' + album.id);
+                            }}
+                            imgWidth={12}
+                          >
+                            <div
+                              className='playlist-card-bottom'
+                              onClick={() => {
+                                push('/client/album/' + album.id);
+                              }}
+                              style={{ cursor: 'pointer' }}
+                            >
+                              <div className='playlist-card-info'>
+                                  <span className='playlist-name'>
+                                    {album.name}
+                                  </span>
+                              </div>
+                              <div className='playlist-tag-container'>
+                                <For data={album.styles} emptyEl={false}>
+                                  {(style: IStyle) => (
+                                    <Tag key={style.id} className='playlist-tag'>
+                                      {style.name}
+                                    </Tag>
+                                  )}
+                                </For>
+                              </div>
+                            </div>
+                          </MusicCard>
+                        </div>
+                      )}
+                    </For>
+                  </InfiniteScroll>} />
               </TabPane>
             ) : null}
             {_userInfo?.id === id ? (
-              <TabPane tab="制作人" key="artist">
-                <If
-                  flag={tabKey === TabKey.ARTIST}
-                  element1={
-                    <div>
-                      <If
-                        flag={userInfo?.role?.id === 2}
-                        element1={<div>制作人数据</div>}
-                        element2={<div>上传作品成为制作人</div>}
-                      />
-                    </div>
-                  }
-                />
-              </TabPane>
+              <TabPane tab='制作人' key='artist' />
             ) : null}
           </Tabs>
         </div>

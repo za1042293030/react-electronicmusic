@@ -14,12 +14,14 @@ import { useRef } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 type Type = 'Recommend' | 'Latest';
+
 interface IState {
   dynamics: IDynamic[];
   sideMode: 'inline' | 'horizontal';
   hasMore: boolean;
   firstTime: boolean;
 }
+
 const pageSize = 10;
 
 const Dynamics: FC<IRouterProps> = ({ route }): ReactElement => {
@@ -85,29 +87,29 @@ const Dynamics: FC<IRouterProps> = ({ route }): ReactElement => {
   const sider = useMemo(
     () => (
       <Menu mode={sideMode} defaultSelectedKeys={['1']}>
-        <Menu.Item key="1" onClick={() => changeType('Recommend')}>
+        <Menu.Item key='1' onClick={() => changeType('Recommend')}>
           推荐
         </Menu.Item>
-        <Menu.Item key="2" onClick={() => changeType('Latest')}>
+        <Menu.Item key='2' onClick={() => changeType('Latest')}>
           最新
         </Menu.Item>
       </Menu>
     ),
-    [sideMode]
+    [sideMode],
   );
 
   const left = useMemo(
     () => (
       <Affix offsetTop={60}>
-        <aside className="left">
+        <aside className='left'>
           {sider}
-          <div className="footer-container">
+          <div className='footer-container'>
             <Footer />
           </div>
         </aside>
       </Affix>
     ),
-    [sider]
+    [sider],
   );
   const { push } = useHistoryScroll();
   const onComment = useCallback((id: number) => {
@@ -116,25 +118,25 @@ const Dynamics: FC<IRouterProps> = ({ route }): ReactElement => {
   const userInfo = useSelector((state: IStoreState) => state.LoginReducer);
 
   return (
-    <div className="dynamic">
-      <main className="main">
-        <div className="dynamic-container">
+    <div className='dynamic'>
+      <main className='main'>
+        <div className='dynamic-container'>
           <If flag={cWidth > SM_CWIDTH} element1={left} />
-          <div className="middle">
+          <div className='middle'>
             <If flag={isEmpty(userInfo)} element2={<DynamicForm onClick={addPlayList} />} />
             <If flag={cWidth < SM_CWIDTH} element1={<Affix offsetTop={50}>{sider}</Affix>} />
             <div
-              className="dynamic-card-container"
+              className='dynamic-card-container'
               style={{ marginTop: isEmpty(userInfo) ? 0 : '1rem' }}
             >
               <InfiniteScroll
                 dataLength={dynamics.length}
                 next={loadOnePageData}
                 hasMore={hasMore && !firstTime}
-                loader={<Skeleton avatar active />}
-                endMessage={<Empty text="暂无更多..." />}
+                loader={<div style={{ padding: '0 1rem'}}><Skeleton avatar active /></div>}
+                endMessage={<Empty text='暂无更多...' />}
               >
-                <For data={dynamics}>
+                <For data={dynamics} emptyEl={false}>
                   {(dynamic: IDynamic) => (
                     <DynamicCard
                       onComment={onComment}

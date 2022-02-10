@@ -18,12 +18,12 @@ interface IState {
 }
 
 const Dynamic: FC<IRouterProps<IParams>> = ({
-  route,
-  match: {
-    params: { id },
-  },
-  history,
-}): ReactElement => {
+                                              route,
+                                              match: {
+                                                params: { id },
+                                              },
+                                              history,
+                                            }): ReactElement => {
   useSetTitle(route.meta?.title!);
   const { addPlayList } = usePlayList();
   const { push } = useHistoryScroll();
@@ -36,7 +36,11 @@ const Dynamic: FC<IRouterProps<IParams>> = ({
       replyLoading: false,
       subReplyLoading: false,
     });
-  const { sendComment, sendReplyComment } = useComment(CommentType.DYNAMIC, parseInt(id));
+  const {
+    sendComment,
+    sendReplyComment,
+    deleteComment,
+  } = useComment(CommentType.DYNAMIC, parseInt(id));
 
   const back = () => {
     history.goBack();
@@ -62,13 +66,13 @@ const Dynamic: FC<IRouterProps<IParams>> = ({
   }, [dynamic, loading]);
 
   return (
-    <div className="dynamic-detail">
-      <main className="main">
-        <div className="dynamic-detail-container">
-          <div className="dynamic-card-container">
-            <div className="back" title="后退" onClick={back}>
+    <div className='dynamic-detail'>
+      <main className='main'>
+        <div className='dynamic-detail-container'>
+          <div className='dynamic-card-container'>
+            <div className='back' title='后退' onClick={back}>
               <LeftOutlined style={{ fontSize: '2rem' }} />
-              <span className="back-text">后退</span>
+              <span className='back-text'>后退</span>
             </div>
             <If
               flag={loading}
@@ -77,6 +81,7 @@ const Dynamic: FC<IRouterProps<IParams>> = ({
                 <DynamicCard
                   openComment
                   {...(dynamic as IDynamicWithComment)}
+                  onDeleteComment={deleteComment}
                   onSendComment={async value => {
                     setState(state => ({
                       ...state,
@@ -89,6 +94,7 @@ const Dynamic: FC<IRouterProps<IParams>> = ({
                     }));
                   }}
                   onSendReplyComment={async (value, commentId) => {
+                    if (!value) return;
                     setState(state => ({
                       ...state,
                       replyLoading: true,
@@ -100,6 +106,7 @@ const Dynamic: FC<IRouterProps<IParams>> = ({
                     }));
                   }}
                   onSendSubReplyComment={async (value, commentId) => {
+                    if (!value) return;
                     setState(state => ({
                       ...state,
                       subReplyLoading: true,

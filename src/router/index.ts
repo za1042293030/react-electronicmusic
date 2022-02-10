@@ -15,6 +15,14 @@ const routerConfig: IRouter[] = [
         },
       },
       {
+        path: '/client/producer/:id',
+        component: lazy(() => import('@/pages/Client/Producer')),
+        meta: {
+          title: '制作人中心',
+          auth: true,
+        },
+      },
+      {
         path: '/client/style',
         component: lazy(() => import('@/pages/Client/Style')),
         meta: {

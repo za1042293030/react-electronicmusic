@@ -6,6 +6,7 @@ interface IState {
   comments: IComment[];
   pageIndex: number;
 }
+
 interface IProps {
   type: CommentType;
   id?: number;
@@ -13,5 +14,7 @@ interface IProps {
   subReplyLoading?: boolean;
   onSendSubReplyComment?: (value: string, commentId: number) => void;
   onSendReplyComment?: (value: string, commentId: number) => void;
+  onDeleteComment?: (id: number) => void | Promise<void>;
 }
+
 export type { IState, IProps };

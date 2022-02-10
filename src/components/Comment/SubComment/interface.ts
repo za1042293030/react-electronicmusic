@@ -6,7 +6,8 @@ interface IProps {
   type: CommentType;
   subReplyLoading?: boolean;
   goToPersonalCenter?: (id?: number) => void;
-  onSendSubReplyComment?: (value: string,commentId: number) => void;
+  onSendSubReplyComment?: (value: string, commentId: number) => void;
+  onDeleteComment?: (id: number) => void | Promise<void>;
 }
 
 interface IState {
@@ -16,4 +17,4 @@ interface IState {
   loading: boolean;
 }
 
-export type { IProps,IState };
+export type { IProps, IState };
