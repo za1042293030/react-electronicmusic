@@ -9,10 +9,10 @@ const antIcon = <LoadingOutlined style={{ fontSize: 36 }} spin />;
  * 读取组件
  * @returns
  */
-const Loading: FC<IProps> = ({ golbal, width, height }): ReactElement => {
+const Loading: FC<IProps> = ({ global, width, height }): ReactElement => {
   return (
     <div
-      className={'loading' + (golbal ? ' golbal' : '')}
+      className={'loading' + (global ? ' global' : '')}
       style={{ width: width && width + 'rem', height: height && height + 'rem' }}
     >
       <Spin indicator={antIcon} />

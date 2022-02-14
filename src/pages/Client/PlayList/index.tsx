@@ -2,7 +2,7 @@ import { IParams, IRouterProps, ISongSimple, IStyle, IPlayList } from '@/common/
 import { If, MusicCard, Comment, ReplyForm, For } from '@/components';
 import { useComment, useHistoryScroll, usePlayList, useSetTitle, useUserInfo } from '@/hooks';
 import api from '@/services';
-import { List, message, PageHeader, Popconfirm, Skeleton, Tag } from 'antd';
+import { List, message, PageHeader, Popconfirm, Skeleton, Tag, Tooltip } from 'antd';
 import moment from 'moment';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 import './index.less';
@@ -20,12 +20,12 @@ interface IState {
 }
 
 const PlayList: FC<IRouterProps<IParams>> = ({
-  route,
-  match: {
-    params: { id },
-  },
-  history,
-}): ReactElement => {
+                                               route,
+                                               match: {
+                                                 params: { id },
+                                               },
+                                               history,
+                                             }): ReactElement => {
   const [{ loading, playlist, songLoading }, setState] = useState<IState>({
     loading: true,
     playlist: undefined,
@@ -33,7 +33,11 @@ const PlayList: FC<IRouterProps<IParams>> = ({
   });
   useSetTitle((playlist?.name ?? '') + '_' + route.meta?.title, [playlist]);
   const { addPlayList } = usePlayList();
-  const { sendComment, sendReplyComment } = useComment(CommentType.PLAYLIST, playlist?.id);
+  const {
+    sendComment,
+    sendReplyComment,
+    deleteComment,
+  } = useComment(CommentType.PLAYLIST, playlist?.id);
   const { push } = useHistoryScroll();
   const { id: userId } = useUserInfo();
 
@@ -84,9 +88,9 @@ const PlayList: FC<IRouterProps<IParams>> = ({
   const cWidth = document.documentElement.clientWidth;
 
   return (
-    <div className="playlist">
-      <main className="main">
-        <div className="playlist-detail-container">
+    <div className='playlist'>
+      <main className='main'>
+        <div className='playlist-detail-container'>
           <PageHeader
             ghost={false}
             onBack={history.goBack}
@@ -98,36 +102,36 @@ const PlayList: FC<IRouterProps<IParams>> = ({
             flag={loading}
             element1={<Skeleton active />}
             element2={
-              <div className="playlist-detail-container-musiccard">
+              <div className='playlist-detail-container-musiccard'>
                 <MusicCard
                   src={playlist?.cover ?? DefaultImg}
                   row
                   playBtn={false}
                   imgWidth={cWidth >= MD_CWIDTH ? 25 : cWidth >= XS_CWIDTH ? 20 : 12}
                 >
-                  <div className="playlist-card-right transition-2">
-                    <h1 className="playlist-card-name">{playlist?.name}</h1>
+                  <div className='playlist-card-right transition-2'>
+                    <h1 className='playlist-card-name'>{playlist?.name}</h1>
                     <If
                       flag={!playlist?.styles || document.documentElement.clientWidth <= XS_CWIDTH}
                       element2={
-                        <div className="playlist-card-right-tag-box">
+                        <div className='playlist-card-right-tag-box'>
                           <For data={playlist?.styles!} emptyEl={false}>
                             {(style: IStyle) => <Tag key={style.id}>{style.name}</Tag>}
                           </For>
                         </div>
                       }
                     />
-                    <div className="playlist-card-describe">
+                    <div className='playlist-card-describe'>
                       <p>{playlist?.describe ?? '暂无介绍'}</p>
                     </div>
-                    <div className="playlist-card-right-bottom">
-                      <p className="playlist-card-right-bottom-artist">
+                    <div className='playlist-card-right-bottom'>
+                      <p className='playlist-card-right-bottom-artist'>
                         创建者：
                         <Link to={'/client/personalcenter/' + playlist?.createBy.id}>
                           {playlist?.createBy.nickName}
                         </Link>
                       </p>
-                      <p className="playlist-card-right-bottom-time">
+                      <p className='playlist-card-right-bottom-time'>
                         {moment(playlist?.createTime).format('YYYY年MMMDo')}
                       </p>
                     </div>
@@ -140,12 +144,12 @@ const PlayList: FC<IRouterProps<IParams>> = ({
             flag={!playlist?.songs}
             element2={
               <List
-                size="small"
-                header={<div className="playlist-song-list-header">歌曲：</div>}
-                className="playlist-song-list"
+                size='small'
+                header={<div className='playlist-song-list-header'>歌曲：</div>}
+                className='playlist-song-list'
                 dataSource={playlist?.songs}
                 renderItem={(song: ISongSimple) => (
-                  <li className="playlist-song-list-item">
+                  <li className='playlist-song-list-item'>
                     <MusicCard
                       height={6}
                       imgWidth={6}
@@ -156,30 +160,33 @@ const PlayList: FC<IRouterProps<IParams>> = ({
                       onClick={() => addPlayList(song)}
                     >
                       <div
-                        className="card-child"
+                        className='card-child'
                         onClick={() => {
                           push('/client/song/' + song.id);
                         }}
-                        title="点击前往歌曲详情页"
+                        title='点击前往歌曲详情页'
                       >
-                        <p>
-                          {song?.name}
-                          <span>{song?.artists?.map(artist => artist.nickName).join(',')}</span>
-                        </p>
+                        <Tooltip
+                          title={'曲名：' + (song?.name ?? '') + ' 制作人：' + song?.artists?.map(artist => artist?.nickName).join(',')}>
+                          <p>
+                            {song?.name}
+                            <span>{song?.artists?.map(artist => artist?.nickName).join(',')}</span>
+                          </p>
+                        </Tooltip>
                       </div>
                     </MusicCard>
                     <If
                       flag={userId === playlist?.createBy.id}
                       element1={
                         <Popconfirm
-                          title="确定要删除吗？"
+                          title='确定要删除吗？'
                           onConfirm={() => onPlayListSongDelete(song.id)}
-                          okText="确认"
-                          cancelText="取消"
+                          okText='确认'
+                          cancelText='取消'
                           okButtonProps={{ loading: songLoading }}
                         >
-                          <span className="playlist-song-del">
-                            <CloseOutlined title="从歌单中删除" />
+                          <span className='playlist-song-del'>
+                            <CloseOutlined title='从歌单中删除' />
                           </span>
                         </Popconfirm>
                       }
@@ -189,15 +196,17 @@ const PlayList: FC<IRouterProps<IParams>> = ({
               />
             }
           />
-          <div className="playlist-comment-list">
-            <div className="playlist-comment-list-text">评论({playlist?.commentedCount})：</div>
-            <div className="playlist-comment-reply">
+          <div className='playlist-comment-list'>
+            <div className='playlist-comment-list-text'>评论({playlist?.commentedCount})：</div>
+            <div className='playlist-comment-reply'>
               <ReplyForm onSendComment={sendComment} />
             </div>
             <Comment
               type={CommentType.PLAYLIST}
               id={playlist?.id}
+              onSendSubReplyComment={sendReplyComment}
               onSendReplyComment={sendReplyComment}
+              onDeleteComment={deleteComment}
             />
           </div>
         </div>

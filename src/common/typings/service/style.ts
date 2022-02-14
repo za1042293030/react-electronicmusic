@@ -30,6 +30,7 @@ interface IPlayListSimple {
   describe: string;
   playListPopVisible: boolean;
   isEditPlayListModalVisible: boolean;
+  createTime: string;
 }
 
 export type { ISongSimple, IStyle, IUserSimple, IPlayListSimple };

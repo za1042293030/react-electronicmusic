@@ -6,7 +6,7 @@ interface IProps {
   type: CommentType;
   subReplyLoading?: boolean;
   goToPersonalCenter?: (id?: number) => void;
-  onSendSubReplyComment?: (value: string, commentId: number) => void;
+  onSendSubReplyComment?: (value: string, commentId: number) => void | Promise<void>;
   onDeleteComment?: (id: number) => void | Promise<void>;
 }
 

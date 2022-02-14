@@ -109,12 +109,12 @@ const Header: FC<IProps> = ({ linkList }): ReactElement => {
             dynamicRef.current?.onClose(300);
           }}
         >
-          <Badge count={5} size='small'>
+          {/*<Badge count={5} size='small'>
             <span className='text'>消息</span>
             <Popup ref={dynamicRef} width={40} height={40}>
               <p>11111</p>
             </Popup>
-          </Badge>
+          </Badge>*/}
         </li>
       </ul>
     ),

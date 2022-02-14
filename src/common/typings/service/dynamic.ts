@@ -7,15 +7,18 @@ interface IDynamicSong {
   cover: string;
   artists: { nickName: string; id: number }[];
 }
+
 interface IDynamicUser {
   id: number;
   avatar: string;
   nickName: string;
 }
+
 interface IDynamicPic {
   id: number;
   src: string;
 }
+
 interface IDynamic {
   id: number;
   createTime: string;
@@ -26,17 +29,20 @@ interface IDynamic {
   song?: IDynamicSong;
   pictures?: IDynamicPic[];
   isPublish: boolean;
+  visible?: boolean;
 }
 
 interface IDynamicWithComment extends IDynamic {
   comments?: IComment[];
 }
+
 interface SendDynamicInfo {
   content: string;
   songId?: number;
   pictureIds?: number[];
   isPrivate: boolean;
 }
+
 export type {
   IDynamicSong,
   IDynamicUser,

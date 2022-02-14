@@ -49,4 +49,31 @@ async function deleteComment(
   )?.data.data;
 }
 
-export { sendComment, getCommentsById, getSubCommentsById, deleteComment };
+async function getApprovingComments(
+  pageIndex: number,
+  pageSize: number,
+): Promise<IPage<IComment> | null | undefined> {
+  return (
+    await ajax<IPage<IComment>>({
+      url: `/api/comment/getApprovingComments?pageIndex=${pageIndex}&pageSize=${pageSize}`,
+    })
+  )?.data.data;
+}
+
+async function changeCommentsAuditStatus(id: number, status: number): Promise<boolean | null | undefined> {
+  return (
+    await ajax<boolean>({
+      url: `/api/comment/changeCommentsAuditStatus?id=${id}&status=${status}`,
+      method: 'POST',
+    })
+  )?.data.data;
+}
+
+export {
+  sendComment,
+  getCommentsById,
+  getSubCommentsById,
+  deleteComment,
+  getApprovingComments,
+  changeCommentsAuditStatus,
+};

@@ -1,9 +1,9 @@
-import { IDelete, IDynamic, ISongSimple, SendDynamicInfo } from '@/common/typings';
+import { IDelete, IDynamic, IPage, ISongSimple, SendDynamicInfo } from '@/common/typings';
 import { ajax } from './ajax';
 
 async function getRecommendDynamics(
   pageIndex: number,
-  pageSize: number
+  pageSize: number,
 ): Promise<IDynamic[] | null | undefined> {
   return (
     await ajax<IDynamic[]>({
@@ -14,7 +14,7 @@ async function getRecommendDynamics(
 
 async function getLatestDynamics(
   pageIndex: number,
-  pageSize: number
+  pageSize: number,
 ): Promise<IDynamic[] | null | undefined> {
   return (
     await ajax<IDynamic[]>({
@@ -58,11 +58,31 @@ async function deleteDynamic(data: IDelete): Promise<boolean | null | undefined>
     })
   )?.data.data;
 }
+
+async function getApprovingDynamics(pageIndex: number, pageSize: number): Promise<IPage<IDynamic> | null | undefined> {
+  return (
+    await ajax<IPage<IDynamic>>({
+      url: `/api/dynamic/getApprovingDynamics?pageIndex=${pageIndex}&pageSize=${pageSize}`,
+    })
+  )?.data.data;
+}
+
+async function changeDynamicsAuditStatus(id: number, status: number): Promise<boolean | null | undefined> {
+  return (
+    await ajax<boolean>({
+      url: `/api/dynamic/changeDynamicsAuditStatus?id=${id}&status=${status}`,
+      method:'POST'
+    })
+  )?.data.data;
+}
+
 export {
   getRecommendDynamics,
   sendDynamic,
   getLatestDynamics,
   getSongsByNameOrProducer,
   getDynamicById,
-  deleteDynamic
+  deleteDynamic,
+  getApprovingDynamics,
+  changeDynamicsAuditStatus
 };

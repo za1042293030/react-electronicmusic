@@ -1,8 +1,8 @@
 import {
-  IAddSongToPlayList,
+  IAddSongToPlayList, IComment,
   ICreatePlayList,
-  IDelete,
-  IPlayList,
+  IDelete, IPage,
+  IPlayList, IPlayListSimple,
   IUpdatePlayList,
 } from '@/common/typings';
 import { ajax } from './ajax';
@@ -65,6 +65,26 @@ async function deletePlayListSong(data: IAddSongToPlayList): Promise<boolean | n
   )?.data.data;
 }
 
+async function getApprovingPlayLists(
+  pageIndex: number,
+  pageSize: number,
+): Promise<IPage<IPlayListSimple> | null | undefined> {
+  return (
+    await ajax<IPage<IPlayListSimple>>({
+      url: `/api/playlist/getApprovingPlayLists?pageIndex=${pageIndex}&pageSize=${pageSize}`,
+    })
+  )?.data.data;
+}
+
+async function changePlayListsAuditStatus(id: number, status: number): Promise<boolean | null | undefined> {
+  return (
+    await ajax<boolean>({
+      url: `/api/playlist/changePlayListsAuditStatus?id=${id}&status=${status}`,
+      method: 'POST',
+    })
+  )?.data.data;
+}
+
 export {
   getPlayListsById,
   createPlayList,
@@ -72,4 +92,6 @@ export {
   deletePlayList,
   addSongToPlayList,
   deletePlayListSong,
+  getApprovingPlayLists,
+  changePlayListsAuditStatus
 };

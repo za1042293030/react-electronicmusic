@@ -5,6 +5,7 @@ import {
   getSongsByNameOrProducer,
   getDynamicById,
   deleteDynamic,
+  getApprovingDynamics, changeDynamicsAuditStatus,
 } from './dynamic';
 import {
   login,
@@ -24,8 +25,15 @@ import {
   getPlayListsByStyleId,
 } from './style';
 import { searchSongs, searchAlbums, searchUsers, searchArtists, searchPlayLists } from './search';
-import { sendComment, getCommentsById, getSubCommentsById, deleteComment } from './comments';
-import { getRecommendAlbums, getAlbumById, getAlbumByUserId } from './album';
+import {
+  sendComment,
+  getCommentsById,
+  getSubCommentsById,
+  deleteComment,
+  getApprovingComments,
+  changeCommentsAuditStatus
+} from './comments';
+import { getRecommendAlbums, getAlbumById, getAlbumByUserId, getApprovingAlbums } from './album';
 import { getSongById } from './song';
 import {
   getPlayListsById,
@@ -33,9 +41,10 @@ import {
   updatePlayList,
   deletePlayList,
   addSongToPlayList,
-  deletePlayListSong
+  deletePlayListSong, changePlayListsAuditStatus, getApprovingPlayLists,
 } from './playlist';
 import { getDynamicByUserId, getPlayListsByUserId } from './user';
+
 const api = {
   loginAdmin,
   login,
@@ -76,6 +85,15 @@ const api = {
   addSongToPlayList,
   deletePlayListSong,
   getAlbumByUserId,
-  deleteComment
+  deleteComment,
+  admin: {
+    getApprovingAlbums,
+    getApprovingDynamics,
+    changeDynamicsAuditStatus,
+    getApprovingComments,
+    changeCommentsAuditStatus,
+    changePlayListsAuditStatus,
+    getApprovingPlayLists
+  },
 };
 export default api;

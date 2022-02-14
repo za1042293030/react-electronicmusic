@@ -12,8 +12,8 @@ interface IProps {
   id?: number;
   replyLoading?: boolean;
   subReplyLoading?: boolean;
-  onSendSubReplyComment?: (value: string, commentId: number) => void;
-  onSendReplyComment?: (value: string, commentId: number) => void;
+  onSendSubReplyComment?: (value: string, commentId: number) => void | Promise<void>;
+  onSendReplyComment?: (value: string, commentId: number) => void | Promise<void>;
   onDeleteComment?: (id: number) => void | Promise<void>;
 }
 

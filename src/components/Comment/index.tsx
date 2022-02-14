@@ -168,8 +168,8 @@ const Comment: FC<IProps> = ({
                   flag={comment.openReplyForm}
                   element1={
                     <ReplyForm
-                      onSendComment={value =>
-                        onSendReplyComment && onSendReplyComment(value, comment.id)
+                      onSendComment={async value =>
+                        onSendReplyComment && (await onSendReplyComment(value, comment.id))
                       }
                       placeholder={'回复@' + comment?.createBy.nickName + '：'}
                       submitLoading={replyLoading}

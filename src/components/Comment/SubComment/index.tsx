@@ -143,8 +143,9 @@ const SubComment: FC<IProps> = ({
                 element1={
                   <ReplyForm
                     placeholder={'回复@' + reply?.createBy.nickName + '：'}
-                    onSendComment={value =>
-                      onSendSubReplyComment && onSendSubReplyComment(value, reply.id)
+                    onSendComment={async value =>
+                      onSendSubReplyComment && (await onSendSubReplyComment(value, reply.id))
+
                     }
                     submitLoading={subReplyLoading}
                     btnText='回复'

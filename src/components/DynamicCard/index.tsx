@@ -6,7 +6,7 @@ import {
   EyeOutlined,
   MessageOutlined,
 } from '@ant-design/icons';
-import { Image, Popconfirm } from 'antd';
+import { Image, Popconfirm, Tooltip } from 'antd';
 import { IProps } from './props';
 import { XS_CWIDTH } from '@/common/constants/clientwidth';
 import { isEmpty } from 'lodash';
@@ -126,9 +126,13 @@ const DynamicCard: FC<IProps & IDynamicWithComment> = ({
               push('/client/song/' + song?.id);
             }}
           >
-            <p>
-              {song?.name} <span>{song?.artists?.map(artist => artist?.nickName).join(',')}</span>
-            </p>
+            <Tooltip
+              title={'曲名：' + (song?.name ?? '') + ' 制作人：' + song?.artists?.map(artist => artist?.nickName).join(',')}>
+              <p>
+                {song?.name}
+                <span>{song?.artists?.map(artist => artist?.nickName).join(',')}</span>
+              </p>
+            </Tooltip>
           </div>
         </MusicCard>
       </div>

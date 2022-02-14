@@ -33,11 +33,11 @@ interface IState {
 }
 
 const Song: FC<IRouterProps<IParams>> = ({
-  route,
-  match: {
-    params: { id },
-  },
-}): ReactElement => {
+                                           route,
+                                           match: {
+                                             params: { id },
+                                           },
+                                         }): ReactElement => {
   const [{ loading, song, isModalVisible, pageIndex, pageSize, playlists, hasMore }, setState] =
     useState<IState>({
       loading: true,
@@ -51,7 +51,7 @@ const Song: FC<IRouterProps<IParams>> = ({
     });
   useSetTitle((song?.name ?? '') + '_' + route.meta?.title, [song]);
   const { addPlayList } = usePlayList();
-  const { sendComment, sendReplyComment } = useComment(CommentType.SONG, song?.id);
+  const { sendComment, sendReplyComment, deleteComment } = useComment(CommentType.SONG, song?.id);
   const history = useHistory();
   const { push } = useHistoryScroll();
   const { isLogin, id: userId } = useUserInfo();
@@ -83,9 +83,9 @@ const Song: FC<IRouterProps<IParams>> = ({
         ...state.playlists,
         ...(!empty
           ? (newPlayLists?.map(newPlayList => ({
-              ...newPlayList,
-              playListPopVisible: false,
-            })) as IPlayListSimple[])
+            ...newPlayList,
+            playListPopVisible: false,
+          })) as IPlayListSimple[])
           : []),
       ],
       playListLoading: false,
@@ -122,9 +122,9 @@ const Song: FC<IRouterProps<IParams>> = ({
   };
 
   return (
-    <div className="song">
-      <main className="main">
-        <div className="song-detail-container">
+    <div className='song'>
+      <main className='main'>
+        <div className='song-detail-container'>
           <PageHeader
             ghost={false}
             onBack={history.goBack}
@@ -136,29 +136,29 @@ const Song: FC<IRouterProps<IParams>> = ({
             flag={loading}
             element1={<Skeleton active />}
             element2={
-              <div className="song-detail-container-musiccard">
+              <div className='song-detail-container-musiccard'>
                 <MusicCard src={song?.cover} row onClick={() => song && addPlayList(song)}>
-                  <div className="song-card-right transition-2">
-                    <p className="song-card-name">{song?.name}</p>
+                  <div className='song-card-right transition-2'>
+                    <p className='song-card-name'>{song?.name}</p>
                     <If
                       flag={!song?.styles || document.documentElement.clientWidth <= XS_CWIDTH}
                       element2={
-                        <div className="song-card-right-tag-box">
+                        <div className='song-card-right-tag-box'>
                           <For data={song?.styles!}>
                             {(style: IStyle) => <Tag key={style.id}>{style.name}</Tag>}
                           </For>
                         </div>
                       }
                     />
-                    <div className="song-card-describe">
+                    <div className='song-card-describe'>
                       <p>{song?.describe ?? '暂无介绍'}</p>
                     </div>
-                    <div className="song-card-right-bottom">
-                      <p className="song-card-right-bottom-artist">
+                    <div className='song-card-right-bottom'>
+                      <p className='song-card-right-bottom-artist'>
                         制作人：
                         <For data={song?.artists ?? []} emptyEl={false}>
                           {artist => (
-                            <Tag color="green" key={artist.id}>
+                            <Tag color='green' key={artist.id}>
                               <Link to={'/client/personalcenter/' + artist.id}>
                                 {artist.nickName}
                               </Link>
@@ -166,7 +166,7 @@ const Song: FC<IRouterProps<IParams>> = ({
                           )}
                         </For>
                       </p>
-                      <p className="song-card-right-bottom-time">
+                      <p className='song-card-right-bottom-time'>
                         时间：{moment(song?.createTime).format('YYYY年MMMDo')}
                       </p>
                     </div>
@@ -175,16 +175,16 @@ const Song: FC<IRouterProps<IParams>> = ({
               </div>
             }
           />
-          <div className="song-comment-list">
-            <div className="song-comment-list-text">
+          <div className='song-comment-list'>
+            <div className='song-comment-list-text'>
               评论({song?.commentedCount})：
               <If
                 flag={isLogin}
                 element1={
                   <>
-                    <p className="song-actions">
+                    <p className='song-actions'>
                       <PlusOutlined
-                        title="添加到我的歌单"
+                        title='添加到我的歌单'
                         onClick={() =>
                           setState(state => ({
                             ...state,
@@ -194,7 +194,7 @@ const Song: FC<IRouterProps<IParams>> = ({
                       />
                     </p>
                     <Modal
-                      title="选择我的歌单"
+                      title='选择我的歌单'
                       visible={isModalVisible}
                       onCancel={() =>
                         setState(state => ({
@@ -214,7 +214,7 @@ const Song: FC<IRouterProps<IParams>> = ({
                               <Skeleton avatar active />
                             </div>
                           }
-                          scrollableTarget="playlist-inscroll"
+                          scrollableTarget='playlist-inscroll'
                         >
                           <For data={playlists}>
                             {(playList: IPlayListSimple) => (
@@ -227,14 +227,14 @@ const Song: FC<IRouterProps<IParams>> = ({
                                   onClick={() => addSongToPlayList(playList?.id)}
                                   imgWidth={12}
                                 >
-                                  <div className="playlist-card-bottom">
-                                    <div className="playlist-card-info">
-                                      <span className="playlist-name">{playList?.name}</span>
+                                  <div className='playlist-card-bottom'>
+                                    <div className='playlist-card-info'>
+                                      <span className='playlist-name'>{playList?.name}</span>
                                     </div>
-                                    <div className="playlist-tag-container">
+                                    <div className='playlist-tag-container'>
                                       <For data={playList?.styles} emptyEl={false}>
                                         {(style: IStyle) => (
-                                          <Tag key={style.id} className="playlist-tag">
+                                          <Tag key={style.id} className='playlist-tag'>
                                             {style.name}
                                           </Tag>
                                         )}
@@ -252,10 +252,15 @@ const Song: FC<IRouterProps<IParams>> = ({
                 }
               />
             </div>
-            <div className="song-comment-reply">
+            <div className='song-comment-reply'>
               <ReplyForm onSendComment={sendComment} />
             </div>
-            <Comment type={CommentType.SONG} id={song?.id} onSendReplyComment={sendReplyComment} />
+            <Comment
+              type={CommentType.SONG}
+              id={song?.id}
+              onSendSubReplyComment={sendReplyComment}
+              onSendReplyComment={sendReplyComment}
+              onDeleteComment={deleteComment} />
           </div>
         </div>
       </main>

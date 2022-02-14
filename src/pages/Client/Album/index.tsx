@@ -2,7 +2,7 @@ import { IAlbum, IParams, IRouterProps, ISongSimple, IStyle } from '@/common/typ
 import { If, MusicCard, Comment, ReplyForm, For } from '@/components';
 import { useComment, useHistoryScroll, usePlayList, useSetTitle } from '@/hooks';
 import api from '@/services';
-import { List, PageHeader, Skeleton, Tag } from 'antd';
+import { List, PageHeader, Skeleton, Tag, Tooltip } from 'antd';
 import moment from 'moment';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 import './index.less';
@@ -30,7 +30,7 @@ const Album: FC<IRouterProps<IParams>> = ({
   });
   useSetTitle((album?.name ?? '') + '_' + route.meta?.title, [album]);
   const { addPlayList } = usePlayList();
-  const { sendComment, sendReplyComment } = useComment(CommentType.ALBUM, album?.id);
+  const { sendComment, sendReplyComment, deleteComment } = useComment(CommentType.ALBUM, album?.id);
   const { push } = useHistoryScroll();
 
   useEffect(() => {
@@ -132,10 +132,13 @@ const Album: FC<IRouterProps<IParams>> = ({
                         }}
                         title="点击前往歌曲详情页"
                       >
-                        <p>
-                          {song?.name}
-                          <span>{song?.artists?.map(artist => artist.nickName).join(',')}</span>
-                        </p>
+                        <Tooltip
+                          title={'曲名：' + (song?.name ?? '') + ' 制作人：' + song?.artists?.map(artist => artist?.nickName).join(',')}>
+                          <p>
+                            {song?.name}
+                            <span>{song?.artists?.map(artist => artist?.nickName).join(',')}</span>
+                          </p>
+                        </Tooltip>
                       </div>
                     </MusicCard>
                   </li>
@@ -151,7 +154,9 @@ const Album: FC<IRouterProps<IParams>> = ({
             <Comment
               type={CommentType.ALBUM}
               id={album?.id}
+              onSendSubReplyComment={sendReplyComment}
               onSendReplyComment={sendReplyComment}
+              onDeleteComment={deleteComment}
             />
           </div>
         </div>

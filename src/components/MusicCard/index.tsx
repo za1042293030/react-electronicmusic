@@ -28,6 +28,7 @@ const MusicCard: VFC<IProps> = ({
       title={imgTitle}
       alt={imgTitle}
       style={{ width: imgWidth + 'rem', height: imgHeight + 'rem' }}
+      id="music-card-img"
     />
   );
   return (

@@ -1,5 +1,5 @@
 interface IProps {
-  golbal?: boolean;
+  global?: boolean;
   width?: number;
   height?: number;
 }
