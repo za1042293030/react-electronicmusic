@@ -69,7 +69,7 @@ const Dynamic: FC<IRouterProps<IParams>> = ({
     <div className='dynamic-detail'>
       <main className='main'>
         <div className='dynamic-detail-container'>
-          <div className='dynamic-card-container'>
+          <div className='dynamic-card-container common-shadow'>
             <div className='back' title='后退' onClick={back}>
               <LeftOutlined style={{ fontSize: '2rem' }} />
               <span className='back-text'>后退</span>

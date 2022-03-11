@@ -27,9 +27,40 @@ const nickNameRule: Rule[] = [
 ];
 
 const playListNameRule: Rule[] = [
+  { required: true, message: '歌单名称为空' },
   { type: 'string', max: 20, message: '歌单名称至多20个字符' },
 ];
 
 const playListDescribeRule: Rule[] = [{ type: 'string', max: 220, message: '歌单简介至多220个字符' }];
 
-export { userNameRule, passwordRule, phoneRule, nickNameRule, playListNameRule, playListDescribeRule };
+const albumNameRule: Rule[] = [
+  { required: true, message: '专辑名称为空' },
+  { type: 'string', max: 20, message: '专辑名称至多20个字符' },
+];
+
+const albumDescribeRule: Rule[] = [
+  {
+    type: 'string',
+    max: 1000,
+    message: '专辑简介至多1000个字符',
+  }];
+
+const songNameRule: Rule[] = [
+  { required: true, message: '歌曲名称为空' },
+  { type: 'string', max: 20, message: '歌曲名称至多20个字符' },
+];
+
+const songDescribeRule: Rule[] = [{ type: 'string', max: 220, message: '歌曲简介至多220个字符' }];
+
+export {
+  userNameRule,
+  passwordRule,
+  phoneRule,
+  nickNameRule,
+  playListNameRule,
+  playListDescribeRule,
+  albumDescribeRule,
+  albumNameRule,
+  songDescribeRule,
+  songNameRule
+};

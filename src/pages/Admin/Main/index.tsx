@@ -43,7 +43,7 @@ const Main: FC<IRouterProps> = ({ route, location: { state } }): ReactElement =>
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
-        <Menu theme='dark' defaultSelectedKeys={[location.pathname]} mode='inline' defaultOpenKeys={['审核','管理']}>
+        <Menu theme='dark' selectedKeys={[location.pathname]} mode='inline' defaultOpenKeys={['审核','管理']}>
           <Menu.Item key='/admin/main/index' icon={<GlobalOutlined />}>
             <Link to='/admin/main/index'>主页</Link>
           </Menu.Item>

@@ -6,7 +6,6 @@ import {
   clearUserInfo as _clearUserInfo,
 } from '@/store/actions';
 import { decode } from 'jsonwebtoken';
-import { isEmpty } from 'lodash';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 
 function useUserInfo() {

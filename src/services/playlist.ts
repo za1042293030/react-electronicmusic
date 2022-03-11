@@ -1,5 +1,5 @@
 import {
-  IAddSongToPlayList, IComment,
+  IAddSongToPlayList,
   ICreatePlayList,
   IDelete, IPage,
   IPlayList, IPlayListSimple,

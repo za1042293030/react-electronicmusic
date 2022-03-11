@@ -9,6 +9,14 @@ async function getAllStyles(): Promise<IStyle[] | null | undefined> {
   )?.data.data;
 }
 
+async function getSelectStyles(): Promise<IStyle[] | null | undefined> {
+  return (
+    await ajax<IStyle[]>({
+      url: '/api/style/getSelectStyles',
+    })
+  )?.data.data;
+}
+
 async function getSongsByStyleId(
   id: number,
   pageIndex: number,
@@ -58,4 +66,5 @@ export {
   getRecommendSongs,
   getRecommendPlayLists,
   getPlayListsByStyleId,
+  getSelectStyles
 };

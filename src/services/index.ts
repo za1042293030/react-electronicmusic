@@ -22,7 +22,7 @@ import {
   getAllStyles,
   getRecommendSongs,
   getRecommendPlayLists,
-  getPlayListsByStyleId,
+  getPlayListsByStyleId, getSelectStyles,
 } from './style';
 import { searchSongs, searchAlbums, searchUsers, searchArtists, searchPlayLists } from './search';
 import {
@@ -31,9 +31,15 @@ import {
   getSubCommentsById,
   deleteComment,
   getApprovingComments,
-  changeCommentsAuditStatus
+  changeCommentsAuditStatus,
 } from './comments';
-import { getRecommendAlbums, getAlbumById, getAlbumByUserId, getApprovingAlbums } from './album';
+import {
+  getRecommendAlbums,
+  getAlbumById,
+  getAlbumByUserId,
+  getApprovingAlbums,
+  createAlbum,
+} from './album';
 import { getSongById } from './song';
 import {
   getPlayListsById,
@@ -43,7 +49,7 @@ import {
   addSongToPlayList,
   deletePlayListSong, changePlayListsAuditStatus, getApprovingPlayLists,
 } from './playlist';
-import { getDynamicByUserId, getPlayListsByUserId } from './user';
+import { getDynamicByUserId, getPlayListsByUserId, getSelectArtists } from './user';
 
 const api = {
   loginAdmin,
@@ -86,6 +92,9 @@ const api = {
   deletePlayListSong,
   getAlbumByUserId,
   deleteComment,
+  createAlbum,
+  getSelectStyles,
+  getSelectArtists,
   admin: {
     getApprovingAlbums,
     getApprovingDynamics,
@@ -93,7 +102,7 @@ const api = {
     getApprovingComments,
     changeCommentsAuditStatus,
     changePlayListsAuditStatus,
-    getApprovingPlayLists
+    getApprovingPlayLists,
   },
 };
 export default api;

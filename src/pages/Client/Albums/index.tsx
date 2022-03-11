@@ -44,7 +44,7 @@ const Albums: FC<IRouterProps> = ({ route }): ReactElement => {
   const forChildren = useCallback(
     (album: ISearchAlbum) => (
       <div className='col-container' key={album.id}>
-        <MusicCard src={album.cover} playBtn={false} onClick={() => goToAlbum(album.id)}>
+        <MusicCard src={album.cover} playBtn={false} onClick={() => goToAlbum(album.id)} className="album-card">
           <div className='song-card-bottom'>
             <div className='song-tag-container'>
               <div className='song-tag-container-inline'>

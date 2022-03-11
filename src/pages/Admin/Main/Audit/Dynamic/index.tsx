@@ -7,7 +7,7 @@ import {
 import { useSetTitle } from '@/hooks';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { For, If } from '@/components';
-import { Button, Image, Space, Table } from 'antd';
+import { Image, Space, Table } from 'antd';
 import api from '@/services';
 import { isEmpty } from 'lodash';
 import moment from 'moment';
@@ -144,7 +144,7 @@ const Dynamic: FC<IRouterProps> = ({ route }): ReactElement => {
                 <div style={{ display: 'none' }}>
                   <Image.PreviewGroup
                     preview={{
-                      visible: dynamic.visible, onVisibleChange: visible => setState(state => ({
+                      visible: dynamic.visible, onVisibleChange: () => setState(state => ({
                         ...state,
                         data: state.data.map(item => ({
                           ...item,
@@ -197,10 +197,9 @@ const Dynamic: FC<IRouterProps> = ({ route }): ReactElement => {
           key='handle'
           render={(_r, dynamic: IDynamic) => (
             <Space>
-              <Button type='primary'
-                      onClick={() => changeDynamicsAuditStatus(dynamic.id, 1)}>同意</Button>
-              <Button type='primary' danger
-                      onClick={() => changeDynamicsAuditStatus(dynamic.id, 2)}>驳回</Button>
+              <a onClick={() => changeDynamicsAuditStatus(dynamic.id, 1)}>同意</a>
+              <a style={{ color: '#ff0000' }}
+                 onClick={() => changeDynamicsAuditStatus(dynamic.id, 2)}>驳回</a>
             </Space>
           )}
         />

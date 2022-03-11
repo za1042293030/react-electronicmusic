@@ -97,12 +97,13 @@ const PlayList: FC<IRouterProps<IParams>> = ({
             title={playlist?.name ?? ''}
             subTitle={'创建者：' + playlist?.createBy.nickName ?? ''}
             style={{ marginBottom: '1rem', padding: '.5rem 1rem' }}
+            className="common-shadow"
           />
           <If
             flag={loading}
             element1={<Skeleton active />}
             element2={
-              <div className='playlist-detail-container-musiccard'>
+              <div className='playlist-detail-container-musiccard common-shadow'>
                 <MusicCard
                   src={playlist?.cover ?? DefaultImg}
                   row
@@ -146,7 +147,7 @@ const PlayList: FC<IRouterProps<IParams>> = ({
               <List
                 size='small'
                 header={<div className='playlist-song-list-header'>歌曲：</div>}
-                className='playlist-song-list'
+                className='playlist-song-list common-shadow'
                 dataSource={playlist?.songs}
                 renderItem={(song: ISongSimple) => (
                   <li className='playlist-song-list-item'>
@@ -196,7 +197,7 @@ const PlayList: FC<IRouterProps<IParams>> = ({
               />
             }
           />
-          <div className='playlist-comment-list'>
+          <div className='playlist-comment-list common-shadow'>
             <div className='playlist-comment-list-text'>评论({playlist?.commentedCount})：</div>
             <div className='playlist-comment-reply'>
               <ReplyForm onSendComment={sendComment} />

@@ -1,12 +1,11 @@
-import { IRouterProps, ISearchAlbum, ISearchSong, IUserSimple } from '@/common/typings';
+import { IRouterProps, ISearchAlbum, IUserSimple } from '@/common/typings';
 import { useSetTitle } from '@/hooks';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
-import { PlayCircleOutlined } from '@ant-design/icons';
 import { For } from '@/components';
-import { Button, Table } from 'antd';
+import { Badge, Dropdown, Menu, Space, Table } from 'antd';
 import api from '@/services';
-import { getApprovingAlbums } from '@/services/album';
 import { isEmpty } from 'lodash';
+import { DownOutlined } from '@ant-design/icons';
 
 const { Column } = Table;
 
@@ -50,6 +49,58 @@ const Album: FC<IRouterProps> = ({ route }): ReactElement => {
     }));
   }
 
+  const menu = (
+    <Menu>
+      <Menu.Item>Action 1</Menu.Item>
+      <Menu.Item>Action 2</Menu.Item>
+    </Menu>
+  );
+
+  const expandedRowRender = () => {
+    const columns = [
+      { title: 'Date', dataIndex: 'date', key: 'date' },
+      { title: 'Name', dataIndex: 'name', key: 'name' },
+      {
+        title: 'Status',
+        key: 'state',
+        render: () => (
+          <span>
+            <Badge status='success' />
+            Finished
+          </span>
+        ),
+      },
+      { title: 'Upgrade Status', dataIndex: 'upgradeNum', key: 'upgradeNum' },
+      {
+        title: 'Action',
+        dataIndex: 'operation',
+        key: 'operation',
+        render: () => (
+          <Space size='middle'>
+            <a>Pause</a>
+            <a>Stop</a>
+            <Dropdown overlay={menu}>
+              <a>
+                More <DownOutlined />
+              </a>
+            </Dropdown>
+          </Space>
+        ),
+      },
+    ];
+
+    const data = [];
+    for (let i = 0; i < 3; ++i) {
+      data.push({
+        key: i,
+        date: '2014-12-24 23:12:00',
+        name: 'This is production name',
+        upgradeNum: 'Upgraded: 56',
+      });
+    }
+    return <Table columns={columns} dataSource={data} pagination={false} />;
+  };
+
   return (
     <div>
       <Table
@@ -62,14 +113,15 @@ const Album: FC<IRouterProps> = ({ route }): ReactElement => {
           showSizeChanger: true,
           onShowSizeChange,
         }}
-        size="large"
+        size='large'
         loading={loading}
+        expandable={{ expandedRowRender }}
       >
         <Column
           title='名字'
           dataIndex='content'
           key='content'
-          render={(name, song: ISearchSong) => (
+          render={name => (
             <span
               className='pointer'
             >
@@ -113,8 +165,8 @@ const Album: FC<IRouterProps> = ({ route }): ReactElement => {
           key='handle'
           render={() => (
             <>
-              <Button type='primary'>同意</Button>
-              <Button type='primary' danger>驳回</Button>
+              <a type='primary'>同意</a>
+              <a style={{ color: '#ff0000' }}>驳回</a>
             </>
           )}
         />

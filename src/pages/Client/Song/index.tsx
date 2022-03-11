@@ -131,12 +131,13 @@ const Song: FC<IRouterProps<IParams>> = ({
             title={song?.name ?? ''}
             subTitle={'制作人：' + song?.artists.map(artist => artist.nickName).join(',') ?? ''}
             style={{ marginBottom: '1rem', padding: '.5rem 1rem' }}
+            className='common-shadow'
           />
           <If
             flag={loading}
             element1={<Skeleton active />}
             element2={
-              <div className='song-detail-container-musiccard'>
+              <div className='song-detail-container-musiccard common-shadow'>
                 <MusicCard src={song?.cover} row onClick={() => song && addPlayList(song)}>
                   <div className='song-card-right transition-2'>
                     <p className='song-card-name'>{song?.name}</p>
@@ -144,7 +145,7 @@ const Song: FC<IRouterProps<IParams>> = ({
                       flag={!song?.styles || document.documentElement.clientWidth <= XS_CWIDTH}
                       element2={
                         <div className='song-card-right-tag-box'>
-                          <For data={song?.styles!}>
+                          <For data={song?.styles!} emptyEl={false}>
                             {(style: IStyle) => <Tag key={style.id}>{style.name}</Tag>}
                           </For>
                         </div>
@@ -175,7 +176,7 @@ const Song: FC<IRouterProps<IParams>> = ({
               </div>
             }
           />
-          <div className='song-comment-list'>
+          <div className='song-comment-list common-shadow'>
             <div className='song-comment-list-text'>
               评论({song?.commentedCount})：
               <If

@@ -1,10 +1,10 @@
-import { IDynamic, IPlayListSimple } from '@/common/typings';
+import { IDynamic, IPlayListSimple, IUserSimple } from '@/common/typings';
 import { ajax } from './ajax';
 
 async function getDynamicByUserId(
   id: number,
   pageSize: number,
-  pageIndex: number
+  pageIndex: number,
 ): Promise<IDynamic[] | null | undefined> {
   return (
     await ajax<IDynamic[]>({
@@ -16,7 +16,7 @@ async function getDynamicByUserId(
 async function getPlayListsByUserId(
   id: number,
   pageIndex: number,
-  pageSize: number
+  pageSize: number,
 ): Promise<IPlayListSimple[] | null | undefined> {
   return (
     await ajax<IPlayListSimple[]>({
@@ -25,4 +25,14 @@ async function getPlayListsByUserId(
   )?.data.data;
 }
 
-export { getDynamicByUserId, getPlayListsByUserId };
+async function getSelectArtists(
+  key: string,
+): Promise<IUserSimple[] | null | undefined> {
+  return (
+    await ajax<IUserSimple[]>({
+      url: `/api/user/getSelectArtists?key=${key}`,
+    })
+  )?.data.data;
+}
+
+export { getDynamicByUserId, getPlayListsByUserId, getSelectArtists };

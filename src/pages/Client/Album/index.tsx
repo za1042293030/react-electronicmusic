@@ -62,12 +62,13 @@ const Album: FC<IRouterProps<IParams>> = ({
             title={album?.name ?? ''}
             subTitle={'制作人：' + album?.artists.map(artist => artist.nickName).join(',') ?? ''}
             style={{ marginBottom: '1rem', padding: '.5rem 1rem' }}
+            className="common-shadow"
           />
           <If
             flag={loading}
             element1={<Skeleton active />}
             element2={
-              <div className="album-detail-container-musiccard">
+              <div className="album-detail-container-musiccard common-shadow">
                 <MusicCard src={album?.cover} row playBtn={false}>
                   <div className="album-card-right transition-2">
                     <p className="album-card-name">{album?.name}</p>
@@ -75,7 +76,7 @@ const Album: FC<IRouterProps<IParams>> = ({
                       flag={!album?.styles || document.documentElement.clientWidth <= XS_CWIDTH}
                       element2={
                         <div className="album-card-right-tag-box">
-                          <For data={album?.styles!}>
+                          <For data={album?.styles!} emptyEl={false}>
                             {(style: IStyle) => <Tag key={style.id}>{style.name}</Tag>}
                           </For>
                         </div>
@@ -112,7 +113,7 @@ const Album: FC<IRouterProps<IParams>> = ({
               <List
                 size="small"
                 header={<div className="album-song-list-header">歌曲：</div>}
-                className="album-song-list"
+                className="album-song-list common-shadow"
                 dataSource={album?.songs}
                 renderItem={(song: ISongSimple) => (
                   <li className="album-song-list-item">
@@ -146,7 +147,7 @@ const Album: FC<IRouterProps<IParams>> = ({
               />
             }
           />
-          <div className="album-comment-list">
+          <div className="album-comment-list common-shadow">
             <div className="album-comment-list-text">评论({album?.commentedCount})：</div>
             <div className="album-comment-reply">
               <ReplyForm onSendComment={sendComment} />

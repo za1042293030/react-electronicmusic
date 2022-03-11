@@ -1,14 +1,13 @@
 import {
-  IComment,
   IDynamic,
-  IDynamicPic, IDynamicSong, IPlayList, IPlayListSimple,
+  IPlayListSimple,
   IRouterProps,
   IUserSimple,
 } from '@/common/typings';
 import { useSetTitle } from '@/hooks';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
-import { For, If } from '@/components';
-import { Button, Image, Space, Table } from 'antd';
+import { If } from '@/components';
+import { Image, Space, Table } from 'antd';
 import api from '@/services';
 import { isEmpty } from 'lodash';
 import moment from 'moment';
@@ -70,7 +69,7 @@ const PlayList: FC<IRouterProps> = ({ route }): ReactElement => {
     }));
   };
 
-  const changeCommentsAuditStatus = async (id: number, status: number) => {
+  const changePlayListsAuditStatus = async (id: number, status: number) => {
     await api.admin.changePlayListsAuditStatus(id, status);
     loadData();
   };
@@ -162,10 +161,8 @@ const PlayList: FC<IRouterProps> = ({ route }): ReactElement => {
           key='handle'
           render={(_r, comment: IDynamic) => (
             <Space>
-              <Button type='primary'
-                      onClick={() => changeCommentsAuditStatus(comment.id, 1)}>同意</Button>
-              <Button type='primary' danger
-                      onClick={() => changeCommentsAuditStatus(comment.id, 2)}>驳回</Button>
+              <a onClick={() => changePlayListsAuditStatus(comment.id, 1)}>同意</a>
+              <a style={{ color: '#ff0000' }} onClick={() => changePlayListsAuditStatus(comment.id, 2)}>驳回</a>
             </Space>
           )}
         />

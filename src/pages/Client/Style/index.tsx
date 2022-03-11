@@ -8,6 +8,7 @@ import React, { createContext, FC, ReactElement, useCallback, useEffect, useStat
 import { NavLink } from 'react-router-dom';
 import TagGroup from './components/TagGroup';
 import './index.less';
+
 export const StyleContext = createContext<ISongSimple[] | IPlayListSimple[]>([]);
 
 enum RouterName {
@@ -25,6 +26,7 @@ interface IState {
   totalCount: number;
   pageCurrent: number;
 }
+
 const pageSize = 24;
 
 const Style: FC<IRouterProps> = ({ route, location: { pathname } }): ReactElement => {
@@ -125,8 +127,9 @@ const Style: FC<IRouterProps> = ({ route, location: { pathname } }): ReactElemen
         totalCount: res?.totalCount ?? 0,
         loading: false,
       }));
+      document.title = '风格 | 音乐_' + tag.name;
     },
-    [state.tags, state.subTags]
+    [state.tags, state.subTags],
   );
 
   const onMouseEnter = useCallback((tag: IStyle) => {
@@ -162,10 +165,10 @@ const Style: FC<IRouterProps> = ({ route, location: { pathname } }): ReactElemen
   };
 
   return (
-    <div className="style">
-      <main className="main">
-        <div className="tag-nav transition-2">
-          <div className="tag-nav-container transition-2">
+    <div className='style'>
+      <main className='main'>
+        <div className='tag-nav transition-2'>
+          <div className='tag-nav-container transition-2'>
             <TagGroup
               tags={state.tags}
               onChange={onChange}
@@ -175,26 +178,26 @@ const Style: FC<IRouterProps> = ({ route, location: { pathname } }): ReactElemen
             />
             <TagGroup tags={state.subTags} onChange={onChange} chooseId={state.chooseId} />
           </div>
-          <div className="tag-links">
+          <div className='tag-links'>
             <NavLink
-              activeClassName="ant-tag-checkable-checked"
-              to="/client/style/songs"
-              className="ant-tag ant-tag-checkable"
+              activeClassName='ant-tag-checkable-checked'
+              to='/client/style/songs'
+              className='ant-tag ant-tag-checkable'
               onClick={() => linkClick(RouterName.SONG)}
             >
               音乐
             </NavLink>
             <NavLink
-              activeClassName="ant-tag-checkable-checked"
-              to="/client/style/playlists"
-              className="ant-tag ant-tag-checkable"
+              activeClassName='ant-tag-checkable-checked'
+              to='/client/style/playlists'
+              className='ant-tag ant-tag-checkable'
               onClick={() => linkClick(RouterName.PLAYLIST)}
             >
               歌单
             </NavLink>
           </div>
         </div>
-        <div className="list transition-2">
+        <div className='list transition-2'>
           <If
             flag={state.loading}
             element1={<Loading />}
@@ -207,7 +210,7 @@ const Style: FC<IRouterProps> = ({ route, location: { pathname } }): ReactElemen
                   flag={state.chooseId !== -1 && isLogin && state.totalCount !== 0}
                   element1={
                     <Pagination
-                      className="style-pagination"
+                      className='style-pagination'
                       total={state.totalCount}
                       pageSize={pageSize}
                       showSizeChanger={false}

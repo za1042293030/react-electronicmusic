@@ -1,6 +1,6 @@
 import { BaseResponse, IDynamicSong, IFile, ISongSimple } from '@/common/typings';
 import { Empty, For, If, MusicCard, SearchInput } from '@/components';
-import { Button, Upload, Image, Modal, message, Checkbox, Skeleton } from 'antd';
+import { Button, Upload, Image, Modal, message, Checkbox, Skeleton, Tooltip } from 'antd';
 import { UploadFile } from 'antd/lib/upload/interface';
 import React, { FC, ReactElement, useCallback, useMemo, useRef, useState } from 'react';
 import DefaultSongImg from '@/assets/emptyImg.jpg';
@@ -43,7 +43,7 @@ const DynamicForm: FC<IProps> = ({ onClick }): ReactElement => {
 
   const selectSongsChildren = useCallback(
     (song: ISongSimple) => (
-      <li key={song?.id} className="search-songs-list-item">
+      <li key={song?.id} className='search-songs-list-item'>
         <MusicCard
           height={5}
           row
@@ -52,15 +52,19 @@ const DynamicForm: FC<IProps> = ({ onClick }): ReactElement => {
           fileSrc={song?.file}
           onClick={() => onClick && onClick(song)}
         >
-          <div className="card-child" onClick={() => selectSong(song)}>
-            <p>
-              {song?.name} <span>{song?.artists?.map(artist => artist.nickName).join(',')}</span>
-            </p>
+          <div className='card-child' onClick={() => selectSong(song)}>
+            <Tooltip
+              placement="right"
+              title={'曲名：'+song?.name + ' 制作人：' + song.artists?.map(artist => artist.nickName).join(',')}>
+              <p>
+                {song?.name} <span>{song?.artists?.map(artist => artist.nickName).join(',')}</span>
+              </p>
+            </Tooltip>
           </div>
         </MusicCard>
       </li>
     ),
-    []
+    [],
   );
   const imagePreview = useMemo(
     () => (
@@ -80,7 +84,7 @@ const DynamicForm: FC<IProps> = ({ onClick }): ReactElement => {
         </Image.PreviewGroup>
       </div>
     ),
-    [state.fileList, state.imagePreviewVisible]
+    [state.fileList, state.imagePreviewVisible],
   );
   const clearSong = () => {
     setState(state => ({ ...state, song: undefined }));
@@ -88,7 +92,7 @@ const DynamicForm: FC<IProps> = ({ onClick }): ReactElement => {
   const musicCardChild = useMemo(
     () => (
       <div
-        className="card-child"
+        className='card-child'
         onClick={async () => {
           if (isEmpty(state.songs)) {
             const songs = await api.getRecommendSongs(5);
@@ -108,7 +112,7 @@ const DynamicForm: FC<IProps> = ({ onClick }): ReactElement => {
             </p>
           }
           element2={
-            <div className="card-child">
+            <div className='card-child'>
               <p
                 onClick={() => {
                   setState(state => ({ ...state, modalVisible: true }));
@@ -123,7 +127,7 @@ const DynamicForm: FC<IProps> = ({ onClick }): ReactElement => {
         />
       </div>
     ),
-    [state.song, state.songs]
+    [state.song, state.songs],
   );
 
   //发布动态
@@ -154,11 +158,11 @@ const DynamicForm: FC<IProps> = ({ onClick }): ReactElement => {
       songId: isEmpty(state.song) ? undefined : state.song!.id,
       pictureIds: !isEmpty(state.fileList)
         ? (state.fileList
-            .map(file => {
-              if (file.status === 'success' || file.status === 'done')
-                return file.response?.data.id;
-            })
-            .filter(id => id !== undefined) as number[])
+          .map(file => {
+            if (file.status === 'success' || file.status === 'done')
+              return file.response?.data.id;
+          })
+          .filter(id => id !== undefined) as number[])
         : undefined,
       isPrivate: isPrivate.current,
     });
@@ -175,15 +179,15 @@ const DynamicForm: FC<IProps> = ({ onClick }): ReactElement => {
   }, [state.fileList, state.song, contentRef]);
 
   return (
-    <div className="dynamic-form">
+    <div className='dynamic-form'>
       <form>
         <textarea
-          className="textarea transition-2"
-          placeholder="说你想说的"
+          className='textarea transition-2'
+          placeholder='说你想说的'
           rows={5}
           ref={contentRef}
         ></textarea>
-        <div className="song">
+        <div className='song'>
           <MusicCard
             row
             src={state.song?.cover ?? DefaultSongImg}
@@ -195,11 +199,11 @@ const DynamicForm: FC<IProps> = ({ onClick }): ReactElement => {
             {musicCardChild}
           </MusicCard>
         </div>
-        <div className="form-bottom">
-          <div className="img-upload">
+        <div className='form-bottom'>
+          <div className='img-upload'>
             <Upload
               action={BASE_URL + '/api/file/uploadImage'}
-              listType="picture-card"
+              listType='picture-card'
               fileList={state.fileList}
               onChange={({ file, fileList }) => {
                 if (file && file.status === 'error') message.error(file.response?.message);
@@ -209,32 +213,33 @@ const DynamicForm: FC<IProps> = ({ onClick }): ReactElement => {
               headers={{
                 token: localStorage.getItem(TOKEN) ?? '',
               }}
-              name="img"
+              name='img'
             >
               {state.fileList.length < 9 && <PlusOutlined style={{ fontSize: '2rem' }} />}
             </Upload>
           </div>
-          <div className="send">
-            <Checkbox className="public-checkbox" onChange={onChange}>
+          <div className='send'>
+            <Checkbox className='public-checkbox' onChange={onChange}>
               私密
             </Checkbox>
-            <Button type="primary" onClick={sendDynamic} loading={state.submitLoading}>
+            <Button type='primary' onClick={sendDynamic} loading={state.submitLoading}>
               发布
             </Button>
           </div>
         </div>
       </form>
       <If flag={!isEmpty(state.fileList)} element1={imagePreview} />
-      <Modal title="选择音乐" visible={state.modalVisible} onCancel={onCencel} footer={null}>
-        <SearchInput placeholder="搜索音乐或制作人" onSearch={onSearch} />
+      <Modal title='选择音乐' visible={state.modalVisible} onCancel={onCencel} footer={null}>
+        <SearchInput placeholder='搜索音乐或制作人' onSearch={onSearch} />
         <If
           flag={!state.loading && !isEmpty(state.songs)}
           element1={
-            <For data={state.songs!} tag="ul" className="search-songs-list">
+            <For data={state.songs!} tag='ul' className='search-songs-list'>
               {selectSongsChildren}
             </For>
           }
-          element2={<If flag={!state.loading} element1={<Empty />} element2={<Skeleton active />} />}
+          element2={<If flag={!state.loading} element1={<Empty />}
+                        element2={<Skeleton active />} />}
         />
       </Modal>
     </div>

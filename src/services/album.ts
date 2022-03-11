@@ -1,4 +1,4 @@
-import { IAlbum, IPage, ISearchAlbum } from '@/common/typings';
+import { IAlbum, ICreateAlbum, IPage, ISearchAlbum } from '@/common/typings';
 import { ajax } from './ajax';
 
 async function getRecommendAlbums(size: number): Promise<ISearchAlbum[] | null | undefined> {
@@ -33,4 +33,15 @@ async function getApprovingAlbums(pageIndex: number, pageSize: number): Promise<
   )?.data.data;
 }
 
-export { getRecommendAlbums, getAlbumById, getAlbumByUserId, getApprovingAlbums };
+async function createAlbum(data: ICreateAlbum): Promise<boolean | null | undefined> {
+  return (
+    await ajax<boolean>({
+      url: '/api/album/createAlbum',
+      method: 'POST',
+      data,
+    })
+  )?.data.data;
+}
+
+
+export { getRecommendAlbums, getAlbumById, getAlbumByUserId, getApprovingAlbums,createAlbum };

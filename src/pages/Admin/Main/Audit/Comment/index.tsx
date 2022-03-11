@@ -1,14 +1,12 @@
 import {
   IComment,
   IDynamic,
-  IDynamicPic, IDynamicSong,
   IRouterProps,
   IUserSimple,
 } from '@/common/typings';
 import { useSetTitle } from '@/hooks';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
-import { For, If } from '@/components';
-import { Button, Image, Space, Table } from 'antd';
+import { Space, Table } from 'antd';
 import api from '@/services';
 import { isEmpty } from 'lodash';
 import moment from 'moment';
@@ -155,10 +153,9 @@ const Comment: FC<IRouterProps> = ({ route }): ReactElement => {
           key='handle'
           render={(_r, comment: IDynamic) => (
             <Space>
-              <Button type='primary'
-                      onClick={() => changeCommentsAuditStatus(comment.id, 1)}>同意</Button>
-              <Button type='primary' danger
-                      onClick={() => changeCommentsAuditStatus(comment.id, 2)}>驳回</Button>
+              <a onClick={() => changeCommentsAuditStatus(comment.id, 1)}>同意</a>
+              <a style={{ color: '#ff0000' }}
+                 onClick={() => changeCommentsAuditStatus(comment.id, 2)}>驳回</a>
             </Space>
           )}
         />
