@@ -1,4 +1,4 @@
-import { IUserSimple, IStyle } from '.';
+import { IUserSimple, IStyle, ISongSimple } from '.';
 
 interface ISearchSong {
   id: number;
@@ -11,18 +11,22 @@ interface ISearchSong {
     name: string;
   };
 }
+
 interface ISearchAlbum {
   id: number;
   name: string;
   artists: IUserSimple[];
   cover: string;
+  songs?: ISongSimple[];
   styles: IStyle[];
 }
+
 interface ISearchUser {
   id: number;
   nickName: string;
   avatar: string;
 }
+
 interface ISearchPlayList {
   id: number;
   name: string;
@@ -30,4 +34,5 @@ interface ISearchPlayList {
   styles: IStyle[];
   cover: string | null;
 }
+
 export type { ISearchSong, ISearchAlbum, ISearchUser, ISearchPlayList };

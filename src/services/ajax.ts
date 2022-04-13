@@ -32,9 +32,8 @@ function ajax<T = unknown>(
       if (msg.includes('过期')) {
         store.dispatch(clearUserInfo());
       }
-      console.log('error status:'+status);
+      console.log('error status:' + status);
       message.error(msg);
-      // return { code: RESPONSE_CODE.FAIL, message: status + ' ' + msg, data: null };
     }
   );
   //请求拦截

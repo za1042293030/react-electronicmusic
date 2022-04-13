@@ -1,7 +1,19 @@
 import { ICreateAlbum, IRawCreateAlbum, IRouterProps, IStyle, IUserSimple } from '@/common/typings';
 import { useSetTitle } from '@/hooks';
-import { Button, Col, Divider, Form, Input, message, Row, Select, Tabs, Upload } from 'antd';
-import React, { FC, Fragment, ReactElement, useEffect, useState } from 'react';
+import {
+  Button,
+  Col,
+  Divider,
+  Form,
+  FormInstance,
+  Input,
+  message,
+  Row,
+  Select,
+  Tabs,
+  Upload,
+} from 'antd';
+import React, { FC, Fragment, ReactElement, useEffect, useRef, useState } from 'react';
 import './index.less';
 import { MinusCircleOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import { If } from '@/components';
@@ -50,6 +62,7 @@ const Producer: FC<IRouterProps> = ({ route }): ReactElement => {
     })();
   }, []);
 
+  const formRef=useRef<FormInstance<IRawCreateAlbum>>(null);
   const onFinish = async (raw: IRawCreateAlbum) => {
     message.loading({
       key: 1,
@@ -68,9 +81,7 @@ const Producer: FC<IRouterProps> = ({ route }): ReactElement => {
     message.destroy(1);
     if (flag) {
       message.success('上传成功，审核马上好，3秒后刷新页面');
-      setTimeout(() => {
-        location.reload();
-      }, 3000);
+      formRef.current!.resetFields();
     }
   };
 
@@ -86,6 +97,7 @@ const Producer: FC<IRouterProps> = ({ route }): ReactElement => {
                 wrapperCol={{ span: 22 }}
                 onFinish={onFinish}
                 autoComplete='off'
+                ref={formRef}
               >
                 <Form.Item
                   label='专辑名字'

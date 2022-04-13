@@ -150,8 +150,9 @@ const Header: FC<IProps> = ({ linkList }): ReactElement => {
     <Affix offsetTop={0}>
       <header className='header transition-5'>
         <div className='header-logo transition-5'>
-          <img
-            src='https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic1.nipic.com%2F2008-11-11%2F20081111143325675_2.jpg&refer=http%3A%2F%2Fpic1.nipic.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1643355627&t=549eab1fd14b9e6e5b2d018586acae16' />
+          {/*<img*/}
+          {/*  src='https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic1.nipic.com%2F2008-11-11%2F20081111143325675_2.jpg&refer=http%3A%2F%2Fpic1.nipic.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1643355627&t=549eab1fd14b9e6e5b2d018586acae16' />*/}
+          <p style={{ fontSize: '2rem',fontFamily:'隶书' }}>巷港</p>
         </div>
         <div className='header-middle'>
           <For data={linkList} tag='ul' className='header-link-box'>

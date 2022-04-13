@@ -1,16 +1,16 @@
 import React, { FC, ReactElement, useEffect, useState } from 'react';
-import { Layout, Menu, Button, message, Popconfirm } from 'antd';
+import { Button, Layout, Menu, message, Popconfirm } from 'antd';
 import {
   AlignLeftOutlined,
-  PieChartOutlined,
-  UserOutlined,
-  UnorderedListOutlined,
-  PlaySquareOutlined,
-  ProfileOutlined,
-  OrderedListOutlined,
   CarryOutOutlined,
   GlobalOutlined,
-  ReconciliationOutlined
+  OrderedListOutlined,
+  // PieChartOutlined,
+  // PlaySquareOutlined,
+  ProfileOutlined,
+  // ReconciliationOutlined,
+  UnorderedListOutlined,
+  // UserOutlined,
 } from '@ant-design/icons';
 import './index.less';
 import { useSetTitle, useSign, useUserInfo } from '@/hooks';
@@ -23,9 +23,8 @@ const { SubMenu } = Menu;
 
 const Main: FC<IRouterProps> = ({ route, location: { state } }): ReactElement => {
   useSetTitle(route?.meta?.title);
-  const { userInfo } = useUserInfo();
+  const { userInfo, isAdmin } = useUserInfo();
   const history = useHistory();
-  const { isAdmin } = useUserInfo();
   const { logOut } = useSign();
 
   useEffect(() => {
@@ -43,7 +42,8 @@ const Main: FC<IRouterProps> = ({ route, location: { state } }): ReactElement =>
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
-        <Menu theme='dark' selectedKeys={[location.pathname]} mode='inline' defaultOpenKeys={['审核','管理']}>
+        <Menu theme='dark' selectedKeys={[location.pathname]} mode='inline'
+              defaultOpenKeys={['审核', '管理']}>
           <Menu.Item key='/admin/main/index' icon={<GlobalOutlined />}>
             <Link to='/admin/main/index'>主页</Link>
           </Menu.Item>
@@ -54,9 +54,9 @@ const Main: FC<IRouterProps> = ({ route, location: { state } }): ReactElement =>
             <Menu.Item key='/admin/main/audit/comment' icon={<UnorderedListOutlined />}>
               <Link to='/admin/main/audit/comment'>评论</Link>
             </Menu.Item>
-            <Menu.Item key='/admin/main/audit/song' icon={<PlaySquareOutlined />}>
-              <Link to='/admin/main/audit/song'>歌曲</Link>
-            </Menu.Item>
+            {/*<Menu.Item key='/admin/main/audit/song' icon={<PlaySquareOutlined />}>*/}
+            {/*  <Link to='/admin/main/audit/song'>歌曲</Link>*/}
+            {/*</Menu.Item>*/}
             <Menu.Item key='/admin/main/audit/album' icon={<ProfileOutlined />}>
               <Link to='/admin/main/audit/album'>专辑</Link>
             </Menu.Item>
@@ -64,14 +64,14 @@ const Main: FC<IRouterProps> = ({ route, location: { state } }): ReactElement =>
               <Link to='/admin/main/audit/playlist'>歌单</Link>
             </Menu.Item>
           </SubMenu>
-          <SubMenu key='管理' icon={<ReconciliationOutlined />} title='管理'>
-            <Menu.Item key='6' icon={<UserOutlined />}>用户</Menu.Item>
-            <Menu.Item key='7' icon={<PieChartOutlined />}>动态</Menu.Item>
-            <Menu.Item key='8' icon={<PieChartOutlined />}>评论</Menu.Item>
-            <Menu.Item key='9' icon={<PieChartOutlined />}>歌曲</Menu.Item>
-            <Menu.Item key='10' icon={<PieChartOutlined />}>专辑</Menu.Item>
-            <Menu.Item key='11' icon={<PieChartOutlined />}>歌单</Menu.Item>
-          </SubMenu>
+          {/*<SubMenu key='管理' icon={<ReconciliationOutlined />} title='管理'>*/}
+          {/*  <Menu.Item key='6' icon={<UserOutlined />}>用户</Menu.Item>*/}
+          {/*  <Menu.Item key='7' icon={<PieChartOutlined />}>动态</Menu.Item>*/}
+          {/*  <Menu.Item key='8' icon={<PieChartOutlined />}>评论</Menu.Item>*/}
+          {/*  <Menu.Item key='9' icon={<PieChartOutlined />}>歌曲</Menu.Item>*/}
+          {/*  <Menu.Item key='10' icon={<PieChartOutlined />}>专辑</Menu.Item>*/}
+          {/*  <Menu.Item key='11' icon={<PieChartOutlined />}>歌单</Menu.Item>*/}
+          {/*</SubMenu>*/}
         </Menu>
       </Sider>
       <Layout className='site-layout'>

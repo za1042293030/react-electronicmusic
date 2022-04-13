@@ -38,7 +38,7 @@ import {
   getAlbumById,
   getAlbumByUserId,
   getApprovingAlbums,
-  createAlbum,
+  createAlbum, changeAlbumsAuditStatus,
 } from './album';
 import { getSongById } from './song';
 import {
@@ -103,6 +103,7 @@ const api = {
     changeCommentsAuditStatus,
     changePlayListsAuditStatus,
     getApprovingPlayLists,
+    changeAlbumsAuditStatus,
   },
 };
 export default api;

@@ -43,5 +43,20 @@ async function createAlbum(data: ICreateAlbum): Promise<boolean | null | undefin
   )?.data.data;
 }
 
+async function changeAlbumsAuditStatus(id: number, status: number): Promise<boolean | null | undefined> {
+  return (
+    await ajax<boolean>({
+      url: `/api/album/changeAlbumsAuditStatus?id=${id}&status=${status}`,
+      method: 'POST',
+    })
+  )?.data.data;
+}
 
-export { getRecommendAlbums, getAlbumById, getAlbumByUserId, getApprovingAlbums,createAlbum };
+export {
+  getRecommendAlbums,
+  getAlbumById,
+  getAlbumByUserId,
+  getApprovingAlbums,
+  createAlbum,
+  changeAlbumsAuditStatus,
+};

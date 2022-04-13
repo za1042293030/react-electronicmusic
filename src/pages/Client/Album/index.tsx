@@ -1,6 +1,6 @@
 import { IAlbum, IParams, IRouterProps, ISongSimple, IStyle } from '@/common/typings';
 import { If, MusicCard, Comment, ReplyForm, For } from '@/components';
-import { useComment, useHistoryScroll, usePlayList, useSetTitle } from '@/hooks';
+import { useComment, useHistoryScroll, usePlayList, useSetTitle, useUserInfo } from '@/hooks';
 import api from '@/services';
 import { List, PageHeader, Skeleton, Tag, Tooltip } from 'antd';
 import moment from 'moment';
@@ -22,7 +22,7 @@ const Album: FC<IRouterProps<IParams>> = ({
   match: {
     params: { id },
   },
-  history
+  history,
 }): ReactElement => {
   const [{ loading, album }, setState] = useState<IState>({
     loading: true,
@@ -32,6 +32,7 @@ const Album: FC<IRouterProps<IParams>> = ({
   const { addPlayList } = usePlayList();
   const { sendComment, sendReplyComment, deleteComment } = useComment(CommentType.ALBUM, album?.id);
   const { push } = useHistoryScroll();
+  const { isLogin } = useUserInfo();
 
   useEffect(() => {
     (async () => {
@@ -87,7 +88,7 @@ const Album: FC<IRouterProps<IParams>> = ({
                     </div>
                     <div className="album-card-right-bottom">
                       <p className="album-card-right-bottom-artist">
-                        制作人：
+                        创建人：
                         <For data={album?.artists ?? []} emptyEl={false}>
                           {artist => (
                             <Tag color="green" key={artist.id}>
@@ -134,7 +135,13 @@ const Album: FC<IRouterProps<IParams>> = ({
                         title="点击前往歌曲详情页"
                       >
                         <Tooltip
-                          title={'曲名：' + (song?.name ?? '') + ' 制作人：' + song?.artists?.map(artist => artist?.nickName).join(',')}>
+                          title={
+                            '曲名：' +
+                            (song?.name ?? '') +
+                            ' 制作人：' +
+                            song?.artists?.map(artist => artist?.nickName).join(',')
+                          }
+                        >
                           <p>
                             {song?.name}
                             <span>{song?.artists?.map(artist => artist?.nickName).join(',')}</span>
@@ -149,9 +156,14 @@ const Album: FC<IRouterProps<IParams>> = ({
           />
           <div className="album-comment-list common-shadow">
             <div className="album-comment-list-text">评论({album?.commentedCount})：</div>
-            <div className="album-comment-reply">
-              <ReplyForm onSendComment={sendComment} />
-            </div>
+            <If
+              flag={isLogin}
+              element1={
+                <div className="album-comment-reply">
+                  <ReplyForm onSendComment={sendComment} />
+                </div>
+              }
+            />
             <Comment
               type={CommentType.ALBUM}
               id={album?.id}
