@@ -2,16 +2,17 @@ import { nickNameValid, passwordValid, phoneValid, userNameValid } from '@/utils
 import { Rule } from 'antd/lib/form';
 
 const userNameRule: Rule[] = [
+  { required: true, message: '账号为空' },
   { type: 'string', min: 8, message: '账号至少8位' },
   { type: 'string', max: 16, message: '账号至多16位' },
-  { validator: userNameValid, validateTrigger: 'onSubmit' },
+  { validator: userNameValid, validateTrigger: 'onChange' },
 ];
 
 const passwordRule: Rule[] = [
   { required: true, message: '密码为空' },
   { type: 'string', min: 10, message: '密码至少10位' },
   { type: 'string', max: 16, message: '密码至多16位' },
-  { validator: passwordValid },
+  { validator: passwordValid, validateTrigger: 'onChange' },
 ];
 
 const phoneRule: Rule[] = [
@@ -23,7 +24,7 @@ const phoneRule: Rule[] = [
 const nickNameRule: Rule[] = [
   { type: 'string', min: 2, message: '昵称至少2位' },
   { type: 'string', max: 10, message: '昵称至多10位' },
-  { validator: nickNameValid, validateTrigger: 'onSubmit' },
+  { validator: nickNameValid, validateTrigger: 'onChange' },
 ];
 
 const playListNameRule: Rule[] = [

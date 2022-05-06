@@ -1,4 +1,4 @@
-import React, { StrictMode } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
@@ -11,13 +11,13 @@ import 'moment/locale/zh-cn';
 moment.locale(navigator.language);
 
 ReactDOM.render(
-  <StrictMode>
+  // <StrictMode>
     <Router>
       <Provider store={store}>
         <App />
       </Provider>
-    </Router>
-  </StrictMode>,
+    </Router>,
+  /* </StrictMode>, */
   document.getElementById('root')
 );
 

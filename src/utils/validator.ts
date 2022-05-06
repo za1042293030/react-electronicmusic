@@ -9,8 +9,8 @@ const nickNameValid: Validateor = (_rule, value, callback) => {
   else {
     api.checkNickNameUnique(value).then(res => {
       if (res === false) callback('昵称已存在');
+      else callback();
     });
-    callback();
     return;
   }
   callback();
@@ -30,8 +30,8 @@ const userNameValid: Validateor = (_rule, value, callback) => {
     }
     api.checkUserNameUnique(value).then(res => {
       if (res === false) callback('账号已存在');
+      else callback();
     });
-    callback();
     return;
   }
   callback();

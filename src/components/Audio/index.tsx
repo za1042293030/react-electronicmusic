@@ -4,7 +4,7 @@ import { clearPlaySong, deletePlaySong } from '@/store/actions';
 import { CaretRightOutlined, LeftOutlined, PauseOutlined, RightOutlined } from '@ant-design/icons';
 import { Button, Drawer, message, Popconfirm } from 'antd';
 import { isEmpty } from 'lodash';
-import React, { FC, MouseEvent, ReactElement, useEffect, useRef, useState } from 'react';
+import React, { FC, MouseEvent, ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { For, If, MusicCard } from '..';
 import './index.less';
@@ -33,7 +33,9 @@ const _Audio: FC = (): ReactElement => {
     visible: false,
     index: 0,
   });
-  const audio = useRef<HTMLAudioElement>(new Audio(playingSong?.file));
+  const memoAudio = useMemo(() => new Audio(playingSong?.file), [playingSong?.file]);
+
+  const audio = useRef<HTMLAudioElement>(memoAudio);
   const audioBar = useRef<HTMLDivElement>(null);
   const timer = useRef<number>(-1);
   const { delPlayList } = usePlayList();
@@ -41,7 +43,7 @@ const _Audio: FC = (): ReactElement => {
 
   useEffect(() => {
     audio.current.loop = false;
-    const onError = function() {
+    const onError = function () {
       if (songs.length === 0) return;
       pause();
       delPlayList(playingSong?.id);
@@ -240,7 +242,7 @@ const _Audio: FC = (): ReactElement => {
   };
 
   return (
-    <div className='audio'>
+    <div className="audio">
       <MusicCard
         height={6}
         imgWidth={6}
@@ -252,7 +254,7 @@ const _Audio: FC = (): ReactElement => {
         playBtn={false}
       >
         <div
-          className='card-child'
+          className="card-child"
           onClick={() => {
             push('/client/song/' + playingSong?.id);
           }}
@@ -269,8 +271,8 @@ const _Audio: FC = (): ReactElement => {
           />
         </div>
       </MusicCard>
-      <div className='audio-player-container'>
-        <div className='audio-player-buttons'>
+      <div className="audio-player-container">
+        <div className="audio-player-buttons">
           <LeftOutlined style={LeftOrRightStyle} onClick={preSong} />
           <If
             flag={state === 'paused' || isEmpty(songs)}
@@ -279,21 +281,21 @@ const _Audio: FC = (): ReactElement => {
           />
           <RightOutlined style={LeftOrRightStyle} onClick={nextSong} />
         </div>
-        <div className='audio-player'>
-          <div className='audio-bar' ref={audioBar} onClick={onClickAudioBar}>
-            <div className='audio-progress transition-2' style={{ width: progressWidth }}></div>
+        <div className="audio-player">
+          <div className="audio-bar" ref={audioBar} onClick={onClickAudioBar}>
+            <div className="audio-progress transition-2" style={{ width: progressWidth }}></div>
           </div>
         </div>
       </div>
       <Drawer
-        title='播放列表'
-        placement='bottom'
+        title="播放列表"
+        placement="bottom"
         closable={false}
         onClose={onClose}
         visible={visible && songs.length > 0}
       >
-        <Popconfirm title='确定要清除吗' onConfirm={clearPlaySongs} okText='确定' cancelText='取消'>
-          <Button type='primary' style={{ width: '100%' }}>
+        <Popconfirm title="确定要清除吗" onConfirm={clearPlaySongs} okText="确定" cancelText="取消">
+          <Button type="primary" style={{ width: '100%' }}>
             清除所有
           </Button>
         </Popconfirm>
@@ -311,22 +313,23 @@ const _Audio: FC = (): ReactElement => {
               key={song?.id}
             >
               <div
-                className='drawer-card-child'
+                className="drawer-card-child"
                 onClick={() => {
                   setState(state => ({
                     ...state,
                     visible: false,
                   }));
-
                 }}
               >
                 <p onClick={() => push('/client/song/' + song?.id)}>
                   {song?.name}
-                  <span
-                    className='drawer-card-text'>{song?.artists?.map(artist => artist.nickName).join(',')}</span>
+                  <span className="drawer-card-text">
+                    {song?.artists?.map(artist => artist.nickName).join(',')}
+                  </span>
                 </p>
-                <span className='drawer-card-text'
-                      onClick={() => deletePlaysongById(song.id)}>移除</span>
+                <span className="drawer-card-text" onClick={() => deletePlaysongById(song.id)}>
+                  移除
+                </span>
               </div>
             </MusicCard>
           )}

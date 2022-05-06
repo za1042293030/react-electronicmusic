@@ -445,7 +445,7 @@ const PersonalCenter: FC<IRouterProps<IParams>> = ({
                               if (file && file.status === 'error')
                                 message.error(file.response?.message);
                               else if (file.response?.code === 1 && file.status !== 'removed') {
-                                message.success('上传成功，审核马上好');
+                                message.success('上传成功');
                               }
                             }}
                             name='avatar'
