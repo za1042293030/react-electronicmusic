@@ -33,6 +33,7 @@ function ajax<T = unknown>(
         store.dispatch(clearUserInfo());
       }
       console.log('error status:' + status);
+      message.destroy();
       message.error(msg);
     }
   );
